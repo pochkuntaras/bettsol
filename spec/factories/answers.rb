@@ -13,4 +13,8 @@ FactoryGirl.define do
   factory :answer do
     content 'Contents of the answer to the question'
   end
+
+  factory :invalid_answer, class: Answer do
+    content nil
+  end
 end

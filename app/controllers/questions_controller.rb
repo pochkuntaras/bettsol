@@ -17,7 +17,7 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
   end
 

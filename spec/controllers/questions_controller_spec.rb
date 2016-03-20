@@ -47,11 +47,6 @@ RSpec.describe QuestionsController, type: :controller do
         }.to_not change(Question, :count)
       end
 
-      it 'should response status unprocessable entity' do
-        post :create, question: attributes_for(:invalid_question)
-        expect(response).to be_unprocessable
-      end
-
       it 'should render new template' do
         post :create, question: attributes_for(:invalid_question)
         expect(response).to render_template :new
