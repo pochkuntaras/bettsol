@@ -1,2 +1,10 @@
 %h1
   Listing questions
+- @questions.each do |question|
+  %p
+    = link_to question.title, question
+    - if current_user && current_user.is_author?(question)
+      \|
+      = link_to 'Delete', question, method: :delete, data: { confirm: 'Are you sure?' }
+.actions
+  = link_to 'Add new question', new_question_path

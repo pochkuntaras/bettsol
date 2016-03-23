@@ -1,18 +1,26 @@
 class AnswersController < ApplicationController
-  before_action :set_question
-
-  def new
-    @answer = @question.answers.build
-  end
+  before_action :authenticate_user!, :set_question
 
   def create
-    @answer = @question.answers.build(answer_params)
+    @answer = current_user.answers.build(answer_params.merge(question_id: @question.id))
 
     if @answer.save
-      redirect_to @question
+      redirect_to @question, notice: 'Your answer was successfully created.'
     else
-      render :new
+      flash.now[:error] = 'Your answer was not created!'
+      render 'questions/show'
     end
+  end
+
+  def destroy
+    answer = Answer.find(params[:id])
+
+    if current_user.is_author?(answer)
+      answer.destroy
+      flash[:notice] = 'Your answer was successfully deleted.'
+    end
+
+    redirect_to @question
   end
 
   private
