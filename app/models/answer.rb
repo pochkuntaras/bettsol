@@ -7,10 +7,12 @@
 #  content     :text             not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  user_id     :integer
 #
 
 class Answer < ActiveRecord::Base
+  belongs_to :user
   belongs_to :question
 
-  validates :question_id, :content, presence: true
+  validates :user_id, :question_id, :content, presence: true
 end

@@ -1,40 +1,62 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  log_in_user
+
   let(:question) { create :question }
 
-  describe 'GET #new' do
-    before { get :new, question_id: question }
-
-    it { expect(assigns(:answer)).to be_a_new(Answer) }
-    it { expect(response).to render_template :new }
-  end
-
   describe 'POST #create' do
+    it 'should save the answer with current user as author' do
+      post :create, question_id: question, answer: attributes_for(:answer)
+      expect(assigns(:answer).user).to eq @user
+    end
+
     context 'with valid attributes' do
-      it 'save answer to the question to database' do
+      it 'should save the answer to the question' do
         expect {
           post :create, question_id: question, answer: attributes_for(:answer)
         }.to change(question.answers, :count).by(1)
       end
 
-      it 'should redirect to show question' do
+      it 'should redirect to show question after created the answer' do
         post :create, question_id: question, answer: attributes_for(:answer)
         expect(response).to redirect_to question
       end
     end
 
     context 'with invalid attributes' do
-      it 'does not save answer to the question to database' do
+      it 'should does not save the invalid answer to the question' do
         expect {
           post :create, question_id: question, answer: attributes_for(:invalid_answer)
         }.to_not change(Answer, :count)
       end
 
-      it 'should render new template' do
+      it 'should render new template if does not create the answer' do
         post :create, question_id: question, answer: attributes_for(:invalid_answer)
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let!(:answer) { create :answer }
+    let!(:user_answer) { create :answer, user: @user }
+
+    it 'should delete the answer if user is author of the answer' do
+      expect{
+        delete :destroy, question_id: user_answer.question, id: user_answer
+      }.to change(Answer, :count).by(-1)
+    end
+
+    it 'should does not delete the answer if user is not author of the answer' do
+      expect{
+        delete :destroy, question_id: answer.question, id: answer
+      }.to_not change(Answer, :count)
+    end
+
+    it 'should redirect to page with question' do
+      delete :destroy, question_id: answer.question, id: answer
+      expect(response).to redirect_to answer.question
     end
   end
 end

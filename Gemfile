@@ -10,18 +10,22 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'devise'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
+  gem 'database_cleaner'
 end
 
 group :development do
   gem 'annotate'
   gem 'quiet_assets'
+  gem 'letter_opener'
   gem 'spring'
 end
 
 group :test do
   gem 'shoulda-matchers', '~> 3.1'
+  gem 'capybara'
 end

@@ -1,2 +1,21 @@
 %h1
-  Show question
+  = @question.title
+%p
+  = @question.content
+- @question.answers.each do |answer|
+  %p
+    = answer.content
+    - if current_user && current_user.is_author?(answer)
+      \|
+      = link_to 'Delete', question_answer_path(@question, answer), method: :delete, data: { confirm: 'Are you sure?' }
+- if user_signed_in?
+  %h2
+    New answer
+  = form_for [@question, @answer] do |f|
+    .field
+      = f.label :content
+      = f.text_area :content
+    .actions
+      = f.submit 'Add new answer'
+- else
+  = link_to 'Sign in to answer the question', new_user_session_path, rel: 'nofollow'
