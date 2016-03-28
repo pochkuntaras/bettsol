@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'User trying answer to the question' do
-  given(:question) { create :question }
+  given!(:question) { create :question }
 
   feature 'Authenticated user' do
     given(:user) { create :user }
@@ -10,15 +10,20 @@ feature 'User trying answer to the question' do
 
     before { log_in(user) }
 
-    scenario 'User created answer to the question' do
+    scenario 'User created answer to the question', js: true do
       create_answer_to_queston question, answer
 
       expect(page).to have_current_path question_path(question)
       expect(page).to have_content 'Your answer was successfully created.'
-      expect(page).to have_content answer[:content]
+
+      within '.question__answers' do
+        expect(page).to have_content answer[:content]
+      end
+
+      expect(page).to have_field 'Content', with: ''
     end
 
-    scenario 'User trying create invalid answer to the question' do
+    scenario 'User trying create invalid answer to the question', js: true do
       create_answer_to_queston question, invalid_answer
 
       expect(page).to have_content 'Your answer was not created!'

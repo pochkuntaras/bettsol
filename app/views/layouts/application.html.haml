@@ -6,10 +6,9 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
+    = render 'layouts/flash'
     - if user_signed_in?
       = link_to 'Sign out', destroy_user_session_path, method: :delete, rel: 'nofollow'
     - else
       = link_to 'Sign in', new_user_session_path, rel: 'nofollow'
-    - flash.each do |name, msg|
-      = content_tag :span, msg, class: name
     = yield
