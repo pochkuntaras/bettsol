@@ -2,13 +2,13 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, :set_question
 
   def create
-    @answer = current_user.answers.build(answer_params.merge(question_id: @question.id))
+    @answer = current_user.answers.build(answer_params.merge(question: @question))
 
     if @answer.save
-      redirect_to @question, notice: 'Your answer was successfully created.'
+      flash.now[:notice] = 'Your answer was successfully created.'
     else
       flash.now[:error] = 'Your answer was not created!'
-      render 'questions/show'
+      render partial: 'layouts/notifications'
     end
   end
 

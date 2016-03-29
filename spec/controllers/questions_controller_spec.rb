@@ -16,6 +16,7 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :show, id: question }
 
     it { expect(assigns(:question)).to eq question }
+    it { expect(assigns(:answer)).to be_a_new(Answer) }
     it { expect(response).to render_template :show }
   end
 

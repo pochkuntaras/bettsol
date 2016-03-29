@@ -1,0 +1,6 @@
+<%= render 'layouts/notifications' %>
+
+(function() {
+    $('.question__answers').append('<%= j render @answer %>');
+    $('#answer_content').val('');
+})();

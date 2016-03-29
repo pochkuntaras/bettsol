@@ -1,9 +1,9 @@
-= form_for @question do |f|
-  .field
+= form_for @question, html: { class: 'form' } do |f|
+  .form__field
     = f.label :title
-    = f.text_field :title
-  .field
+    = f.text_field :title, class: 'form__input'
+  .form__field
     = f.label :content
-    = f.text_area :content
-  .actions
-    = f.submit 'Submit'
+    = f.text_area :content, class: 'form__input'
+  .form__actions
+    = f.submit 'Submit', class: 'button button_green'
