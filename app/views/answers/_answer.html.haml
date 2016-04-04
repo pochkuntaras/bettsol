@@ -1,5 +1,12 @@
-%p
-  = answer.content
-  - if current_user && current_user.is_author?(answer)
-    \|
-    = link_to 'Delete', question_answer_path(@question, answer), method: :delete, data: { confirm: 'Are you sure?' }
+- if answer.persisted?
+  .answer(class="#{'answer_best' if answer.best?}")
+    %p(id="content_answer_#{answer.id}")
+      = answer.content
+    - if current_user && current_user.is_author?(answer)
+      = form_for answer, remote: true, html: { class: 'form', style: 'display: none;' } do |f|
+        .form__field
+          = f.label :content
+          = f.text_area :content, id: nil, class: 'form__input'
+        .actions
+          = f.submit 'Update', class: 'button button_green'
+    = render partial: 'answers/actions', locals: { answer: answer }

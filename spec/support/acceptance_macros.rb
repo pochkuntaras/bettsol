@@ -1,4 +1,4 @@
-module AcceptanceHelper
+module AcceptanceMacros
   def create_question(question)
     visit root_path
 
@@ -9,15 +9,17 @@ module AcceptanceHelper
     fill_in 'Title', with: question[:title]
     fill_in 'Content', with: question[:content]
 
-    click_on 'Submit'
+    click_on 'Save'
   end
 
   def create_answer_to_queston(question, answer)
     visit question_path(question)
 
-    fill_in 'Content', with: answer[:content]
+    within 'form#new_answer' do
+      fill_in 'Content', with: answer[:content]
 
-    click_on 'Add new answer'
+      click_on 'Reply'
+    end
   end
 
   def log_in(user)

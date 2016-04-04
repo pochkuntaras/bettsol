@@ -1,0 +1,4 @@
+- if current_user && current_user.is_author?(question)
+  .actions
+    = button_tag 'Edit', class: 'button button_orange button_question-edit'
+    = link_to 'Delete', question, method: :delete, class: 'button button_red'

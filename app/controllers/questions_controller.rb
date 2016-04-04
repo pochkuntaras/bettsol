@@ -1,6 +1,18 @@
+# == Schema Information
+#
+# Table name: questions
+#
+#  id         :integer          not null, primary key
+#  title      :string           not null
+#  content    :text             not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  user_id    :integer
+#
+
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_question, only: [:show, :destroy]
+  before_action :set_question, except: [:index, :new, :create]
 
   def index
     @questions = Question.all
@@ -22,6 +34,14 @@ class QuestionsController < ApplicationController
     else
       flash.now[:error] = 'Your question was not created!'
       render :new
+    end
+  end
+
+  def update
+    if current_user.is_author?(@question) && @question.update(question_params)
+      flash.now[:notice] = 'Your question was successfully updated.'
+    else
+      flash.now[:error] = 'Your question was not updated!'
     end
   end
 

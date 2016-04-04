@@ -1,6 +1,4 @@
 (function() {
-    var $body = $('body');
-
-    $body.find('.flash').remove();
-    $body.prepend('<%= j render 'layouts/flash' %>');
+    $('.flash').remove();
+    $('.navigation').after('<%= j render 'layouts/flash' %>');
 })();

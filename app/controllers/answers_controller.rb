@@ -1,32 +1,44 @@
+# == Schema Information
+#
+# Table name: answers
+#
+#  id          :integer          not null, primary key
+#  question_id :integer          not null
+#  content     :text             not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  user_id     :integer
+#  best        :boolean          default(FALSE), not null
+#
+
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, :set_question
+  before_action :authenticate_user!
+  before_action :set_answer, except: :create
 
   def create
+    @question = Question.find(params[:question_id])
     @answer = current_user.answers.build(answer_params.merge(question: @question))
+    @answer.save
+  end
 
-    if @answer.save
-      flash.now[:notice] = 'Your answer was successfully created.'
-    else
-      flash.now[:error] = 'Your answer was not created!'
-      render partial: 'layouts/notifications'
-    end
+  def update
+    @answer.update(answer_params) if current_user.is_author?(@answer)
   end
 
   def destroy
-    answer = Answer.find(params[:id])
+    @answer.destroy if current_user.is_author?(@answer)
+    render nothing: true
+  end
 
-    if current_user.is_author?(answer)
-      answer.destroy
-      flash[:notice] = 'Your answer was successfully deleted.'
-    end
-
-    redirect_to @question
+  def best
+    @question = @answer.question
+    @answer.choose_as_best if current_user.is_author?(@question)
   end
 
   private
 
-  def set_question
-    @question = Question.find(params[:question_id])
+  def set_answer
+    @answer = Answer.find(params[:id])
   end
 
   def answer_params

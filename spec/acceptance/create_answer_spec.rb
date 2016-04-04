@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'User trying answer to the question' do
   given!(:question) { create :question }
@@ -14,20 +14,23 @@ feature 'User trying answer to the question' do
       create_answer_to_queston question, answer
 
       expect(page).to have_current_path question_path(question)
-      expect(page).to have_content 'Your answer was successfully created.'
 
       within '.question__answers' do
         expect(page).to have_content answer[:content]
       end
 
-      expect(page).to have_field 'Content', with: ''
+      within 'form#new_answer' do
+        expect(page).to have_field 'Content', with: nil
+      end
     end
 
     scenario 'User trying create invalid answer to the question', js: true do
       create_answer_to_queston question, invalid_answer
 
-      expect(page).to have_content 'Your answer was not created!'
-      expect(page).to have_field 'Content', with: invalid_answer[:content]
+      within 'form#new_answer' do
+        expect(page).to have_field 'Content', with: invalid_answer[:content]
+        expect(page).to have_selector '.validation-error'
+      end
     end
   end
 

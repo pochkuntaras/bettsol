@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'User authentication' do
   given(:new_user) { attributes_for :user }
