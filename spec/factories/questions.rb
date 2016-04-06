@@ -26,7 +26,7 @@ FactoryGirl.define do
       end
 
       after :create do |question, evaluator|
-        FactoryGirl.create_list :answer, evaluator.answers_count, question: question
+        create_list :answer, evaluator.answers_count, question: question
       end
     end
   end
@@ -34,5 +34,10 @@ FactoryGirl.define do
   factory :invalid_question, class: Question do
     title nil
     content nil
+  end
+
+  factory :updated_question, class: Question do
+    title 'Help me please! I do not know how to solve this problem!'
+    content 'My problem is very important! I need to solve it quickly!'
   end
 end

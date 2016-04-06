@@ -1,6 +1,10 @@
-<%= render 'layouts/notifications' %>
-
 (function() {
-    $('.question__answers').append('<%= j render @answer %>');
-    $('#answer_content').val('');
+    var $content = $('form#new_answer #answer_content');
+
+    <% if @answer.errors.present? %>
+        $content.after('<%= j render partial: 'layouts/errors', locals: { errors: @answer.errors }%>');
+    <% else %>
+        $('.question__answers').append('<%= j render @answer %>').children(':last').hide().fadeIn('slow');
+        $content.val('');
+    <% end %>
 })();

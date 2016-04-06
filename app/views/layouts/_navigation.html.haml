@@ -1,0 +1,7 @@
+%nav.navigation
+  = link_to 'Home page', root_path, class: 'button button_blue'
+  = link_to 'Add new question', new_question_path, class: 'button button_green'
+  - if user_signed_in?
+    = link_to 'Sign out', destroy_user_session_path, method: :delete, rel: 'nofollow', class: 'button button_orange'
+  - else
+    = link_to 'Sign in', new_user_session_path, rel: 'nofollow', class: 'button button_blue'

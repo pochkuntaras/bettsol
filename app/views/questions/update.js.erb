@@ -1,0 +1,9 @@
+<%= render 'layouts/notifications' %>
+
+<% unless @question.errors.present? %>
+    (function() {
+        $('.question__title').html('<%= j @question.title %>');
+        $('.question__content').html('<%= j @question.content %>');
+        $('.question__edit').fadeOut();
+    })();
+<% end %>

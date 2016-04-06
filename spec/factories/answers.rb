@@ -8,6 +8,7 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  user_id     :integer
+#  best        :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do
@@ -16,12 +17,17 @@ FactoryGirl.define do
     question
 
     sequence :content do |n|
-      %Q(No problems! I solved the problem
-         by using the method number #{n})
+      "I solved the problem by using the method number #{n}"
     end
   end
 
   factory :invalid_answer, class: Answer do
     content nil
+  end
+
+  factory :updated_answer, class: Answer do
+    sequence :content do |n|
+      "No problems! I solved the problem by using the method number #{n}"
+    end
   end
 end
