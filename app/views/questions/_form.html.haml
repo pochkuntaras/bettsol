@@ -5,5 +5,9 @@
   .form__field
     = f.label :content
     = f.text_area :content, class: 'form__input'
+  .form__field
+    = f.fields_for :attachments do |a|
+      = a.label :file
+      = a.file_field :file
   .actions
     = f.submit 'Save', class: 'button button_green'

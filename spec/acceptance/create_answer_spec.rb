@@ -37,7 +37,7 @@ feature 'User trying answer to the question' do
   scenario 'Not authenticated user trying answer to the question' do
     visit question_path(question)
 
-    click_link 'Sign in to answer the question'
+    click_link 'Sign in to answer'
 
     expect(page).to have_current_path new_user_session_path
   end

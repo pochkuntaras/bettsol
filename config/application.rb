@@ -5,19 +5,14 @@ Bundler.require(*Rails.groups)
 
 module Bettsol
   class Application < Rails::Application
-    config.time_zone = 'Kyiv'
     config.i18n.default_locale = :en
-    config.active_record.raise_in_transactional_callbacks = true
     config.sass.preferred_syntax = :sass
+    config.active_record.raise_in_transactional_callbacks = true
 
     config.generators do |g|
-      g.test_framework :rspec,
-                       fixtures: true,
-                       view_specs: false,
-                       helper_specs: false,
-                       requst_specs: false,
-                       routing_specs: false,
-                       controller_specs: true
+      g.test_framework :rspec, fixtures: true, view_specs: false,
+                       helper_specs: false, routing_specs: false,
+                       request_specs: false, controller_specs: true
 
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end

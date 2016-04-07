@@ -9,5 +9,8 @@
 # Ignore database config
 config/database.yml
 
-# Ignore all RubyMine config files
+# Ignore RubyMine config files
 .idea/
+
+# Ignore uploads
+/public/uploads

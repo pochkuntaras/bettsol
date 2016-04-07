@@ -2,6 +2,8 @@
   .answer(class="#{'answer_best' if answer.best?}")
     %p(id="content_answer_#{answer.id}")
       = answer.content
+    .answer__attachments
+      = render answer.attachments
     - if current_user && current_user.is_author?(answer)
       = form_for answer, remote: true, html: { class: 'form', style: 'display: none;' } do |f|
         .form__field

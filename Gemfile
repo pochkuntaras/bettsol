@@ -14,6 +14,8 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
+gem 'carrierwave'
+gem 'remotipart', '~> 1.2'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
@@ -33,4 +35,5 @@ group :test do
   gem 'capybara'
   gem 'poltergeist'
   gem 'phantomjs', require: 'phantomjs/poltergeist'
+  gem 'fuubar'
 end
