@@ -29,6 +29,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     it { expect(assigns(:question)).to eq question }
     it { expect(assigns(:answer)).to be_a_new(Answer) }
+    it { expect(assigns(:answer).attachments.first).to be_a_new(Attachment) }
     it { expect(response).to render_template :show }
   end
 
@@ -38,6 +39,7 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :new }
 
     it { expect(assigns(:question)).to be_a_new(Question) }
+    it { expect(assigns(:question).attachments.first).to be_a_new(Attachment) }
     it { expect(response).to render_template :new }
   end
 

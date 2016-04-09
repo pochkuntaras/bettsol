@@ -22,6 +22,7 @@ class AnswersController < ApplicationController
   end
 
   def update
+    @question = @answer.question
     @answer.update(answer_params) if current_user.is_author?(@answer)
   end
 
@@ -42,6 +43,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:content)
+    params.require(:answer).permit(:content, attachments_attributes: [:id, :file, :_destroy])
   end
 end

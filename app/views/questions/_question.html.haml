@@ -1,7 +1,9 @@
-.question
-  %h2
-    = question.title
-  .actions
-    - if current_user && current_user.is_author?(question)
+= content_tag_for :div, question do
+  %h1= question.title
+  %p= question.content
+  = render question.attachments
+  = render 'questions/edit_form'
+  - if current_user && current_user.is_author?(question)
+    .actions
+      = button_tag 'Edit', class: 'button button_orange button_question-edit'
       = link_to 'Delete', question, method: :delete, class: 'button button_red'
-    = link_to 'More', question, class: 'button button_blue'

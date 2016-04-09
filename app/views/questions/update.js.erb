@@ -1,9 +1,10 @@
 <%= render 'layouts/notifications' %>
 
-<% unless @question.errors.present? %>
-    (function() {
-        $('.question__title').html('<%= j @question.title %>');
-        $('.question__content').html('<%= j @question.content %>');
-        $('.question__edit').fadeOut();
-    })();
-<% end %>
+(function() {
+    <% if @question.errors.present? %>
+        $('form#edit_question_<%= @question.id %>').replaceWith('<%= j render 'questions/edit_form' %>');
+        $('form#edit_question_<%= @question.id %>').show();
+    <% else %>
+        $('#question_<%= @question.id %>').replaceWith('<%= j render @question %>');
+    <% end %>
+})();

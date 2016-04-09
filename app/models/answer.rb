@@ -17,7 +17,11 @@ class Answer < ActiveRecord::Base
   belongs_to :user
   belongs_to :question
 
+  has_many :attachments, as: :attachable, dependent: :destroy
+
   validates :user_id, :question_id, :content, presence: true
+
+  accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 
   def choose_as_best
     transaction do

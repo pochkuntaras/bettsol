@@ -1,0 +1,9 @@
+.nested-fields
+  - if f.object.persisted?
+    = f.object.file.identifier
+    = f.check_box :_destroy, id: "delete_attachment_#{f.object.id}"
+    = f.label :_destroy, :delete
+  - else
+    = f.label :file
+    = f.file_field :file
+    = link_to_remove_association 'Remove', f, class: 'button button_red'

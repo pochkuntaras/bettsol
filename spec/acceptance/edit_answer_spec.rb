@@ -9,7 +9,7 @@ feature 'Edit answer' do
 
     visit question_path(answer.question)
 
-    within '.answer' do
+    within "#answer_#{answer.id}" do
       expect(page).not_to have_button 'Edit'
     end
   end
@@ -19,7 +19,7 @@ feature 'Edit answer' do
 
     visit question_path(answer.question)
 
-    within '.answer' do
+    within "#answer_#{answer.id}" do
       expect(page).to have_css(:form, visible: false)
 
       click_on 'Edit'
@@ -31,11 +31,7 @@ feature 'Edit answer' do
 
       click_on 'Update'
 
-      within "#content_answer_#{answer.id}" do
-        expect(page).to have_content attributes_updated_answer[:content]
-      end
-
-      expect(page).to have_css(:form, visible: false)
+      expect(page).to have_content attributes_updated_answer[:content]
     end
 
     expect(page).to have_current_path question_path(answer.question)

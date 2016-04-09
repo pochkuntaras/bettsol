@@ -1,7 +1,8 @@
 (function() {
     <% if @answer.errors.present? %>
-        $('form#edit_answer_<%= @answer.id %> textarea').after('<%= j render partial: 'layouts/errors', locals: { errors: @answer.errors }%>');
+        $('form#edit_answer_<%= @answer.id %>').replaceWith('<%= j render partial: 'answers/edit_form', locals: { answer: @answer } %>');
+        $('form#edit_answer_<%= @answer.id %>').show();
     <% else %>
-        $('#content_answer_<%= @answer.id %>').html('<%= j @answer.content %>').siblings('form').fadeOut;
+        $('#answer_<%= @answer.id %>').replaceWith('<%= j render @answer %>');
     <% end %>
 })();

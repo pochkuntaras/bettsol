@@ -19,26 +19,26 @@ feature 'Edit question' do
     visit question_path(question)
 
     within '.question' do
-      expect(page).to have_css('.question__edit', visible: false)
+      expect(page).to have_css('form', visible: false)
 
       click_on 'Edit'
 
-      expect(page).to have_css('.question__edit', visible: true)
+      expect(page).to have_css('form', visible: true)
 
-      within '.question__edit' do
+      within 'form' do
         expect(page).to have_field 'Title', type: 'text', with: question.title
         expect(page).to have_field 'Content', type: 'textarea', with: question.content
 
         fill_in 'Title', with: attributes_updated_question[:title]
         fill_in 'Content', with: attributes_updated_question[:content]
 
-        click_on 'Save'
+        click_on 'Update'
       end
 
-      expect(find('.question__title')).to have_content attributes_updated_question[:title]
-      expect(find('.question__content')).to have_content attributes_updated_question[:content]
+      expect(page).to have_content attributes_updated_question[:title]
+      expect(page).to have_content attributes_updated_question[:content]
 
-      expect(page).to have_css('.question__edit', visible: false)
+      expect(page).to have_css(:form, visible: false)
       expect(page).to have_current_path question_path(question)
     end
 
