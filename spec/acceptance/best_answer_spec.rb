@@ -9,13 +9,13 @@ feature 'Best answer' do
 
     visit question_path(question)
 
-    within '.question__answers' do
+    within '.answers' do
       expect(page).to_not have_selector '.answer_best', match: :first
     end
 
     click_link 'Best answer', href: best_answer_path(answer)
 
-    within '.question__answers' do
+    within '.answers' do
       expect(page).to have_selector '.answer_best', match: :first
       expect(page).not_to have_link 'Best answer', href: best_answer_path(answer)
     end

@@ -11,17 +11,18 @@ feature 'Add files to answer' do
   end
 
   scenario 'The user adds a file when create new answer', js: true do
-
     within 'form#new_answer' do
       fill_in 'Content', with: attributes_answer[:content]
 
-      attach_file 'File', "#{Rails.root}/spec/files/smile.txt"
+      2.times { click_on 'Add attachment' }
+
+      all('input[type="file"]').each { |input| input.set("#{Rails.root}/spec/files/smile.txt") }
 
       click_on 'Reply'
     end
 
-    within '.question__answers' do
-      expect(page).to have_link 'smile.txt', href: '/uploads/attachment/file/1/smile.txt'
+    within '.answers' do
+      1.upto(2) { |i| expect(page).to have_link 'smile.txt', href: "/uploads/attachment/file/#{i}/smile.txt" }
     end
   end
 end

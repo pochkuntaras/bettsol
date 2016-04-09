@@ -4,7 +4,7 @@
     <% if @answer.errors.present? %>
         $content.after('<%= j render partial: 'layouts/errors', locals: { errors: @answer.errors }%>');
     <% else %>
-        $('.question__answers').append('<%= j render @answer %>');
+        $('.answers').append('<%= j render @answer %>');
         $content.val('');
     <% end %>
 })();

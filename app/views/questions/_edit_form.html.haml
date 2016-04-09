@@ -1,5 +1,4 @@
-%h1 New question
-= form_for @question, html: { class: 'form' } do |f|
+= form_for @question, html: { class: 'form', style: 'display: none;' }, remote: true do |f|
   .form__field
     = f.label :title
     = f.text_field :title, class: 'form__input'
@@ -9,5 +8,4 @@
   = f.fields_for :attachments do |attachment|
     = render 'layouts/attachment_fields', f: attachment
   .actions
-    = link_to_add_association 'Add attachment', f, :attachments, partial: 'layouts/attachment_fields', class: 'button button_blue'
-    = f.submit 'Save', class: 'button button_green'
+    = f.submit 'Update', class: 'button button_green'

@@ -9,14 +9,16 @@ feature 'Add files to question' do
     visit new_question_path
   end
 
-  scenario 'The user adds a file when create new question' do
+  scenario 'The user adds a file when create new question', js: true do
     fill_in 'Title', with: attributes_question[:title]
     fill_in 'Content', with: attributes_question[:content]
 
-    attach_file 'File', "#{Rails.root}/spec/files/smile.txt"
+    2.times { click_on 'Add attachment' }
+
+    all('input[type="file"]').each { |input| input.set("#{Rails.root}/spec/files/smile.txt") }
 
     click_on 'Save'
 
-    expect(page).to have_link 'smile.txt', href: '/uploads/attachment/file/1/smile.txt'
+    1.upto(3) { |i| expect(page).to have_link 'smile.txt', href: "/uploads/attachment/file/#{i}/smile.txt" }
   end
 end

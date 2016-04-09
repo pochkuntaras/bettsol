@@ -15,7 +15,7 @@ feature 'User trying answer to the question' do
 
       expect(page).to have_current_path question_path(question)
 
-      within '.question__answers' do
+      within '.answers' do
         expect(page).to have_content answer[:content]
       end
 

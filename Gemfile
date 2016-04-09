@@ -16,6 +16,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
 gem 'carrierwave'
 gem 'remotipart', '~> 1.2'
+gem 'cocoon'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'

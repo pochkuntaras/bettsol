@@ -1,0 +1,9 @@
+- if current_user && current_user.is_author?(answer)
+  = form_for answer, remote: true, html: { class: 'form', style: 'display: none;' } do |f|
+    .form__field
+      = f.label :content
+      = f.text_area :content, id: nil, class: 'form__input'
+    = f.fields_for :attachments do |attachment|
+      = render 'layouts/attachment_fields', f: attachment
+    .actions
+      = f.submit 'Update', class: 'button button_green'
