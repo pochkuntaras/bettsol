@@ -14,6 +14,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, except: [:index, :new, :create]
 
+  include Voted
+
   def index
     @questions = Question.all
   end

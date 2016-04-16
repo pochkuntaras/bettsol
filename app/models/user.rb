@@ -27,11 +27,16 @@
 class User < ActiveRecord::Base
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
+  has_many :voices, dependent: :destroy
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable
 
   def is_author?(object)
     object.user_id == self.id
+  end
+
+  def voted_for?(object)
+    voices.where(votable: object).exists?
   end
 end

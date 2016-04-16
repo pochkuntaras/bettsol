@@ -1,4 +1,4 @@
-require_relative 'acceptance_helper'
+require_relative '../acceptance_helper'
 
 feature 'User can view' do
   given(:questions) { create_list :question_with_answers, 2 }

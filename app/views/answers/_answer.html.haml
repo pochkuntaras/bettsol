@@ -1,5 +1,6 @@
 - if answer.persisted?
   = content_tag_for :div, answer, class: answer.best ? 'answer_best' : '' do
+    = vote_for answer
     %p= answer.content
     = render answer.attachments
     = render partial: 'answers/edit_form', locals: { answer: answer }
