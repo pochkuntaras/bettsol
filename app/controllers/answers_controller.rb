@@ -15,6 +15,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_answer, except: :create
 
+  include Voted
+
   def create
     @question = Question.find(params[:question_id])
     @answer = current_user.answers.build(answer_params.merge(question: @question))

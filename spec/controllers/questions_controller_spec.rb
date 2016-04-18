@@ -17,6 +17,15 @@ RSpec.describe QuestionsController, type: :controller do
   let(:questions) { create_list :question, 2 }
   let!(:question) { questions.first }
 
+  describe 'Vote' do
+    log_in_user
+
+    let(:votable) { create :question }
+    let(:user_votable) { create :question, user: @user }
+
+    it_behaves_like 'voted'
+  end
+
   describe 'GET #index' do
     before { get :index }
 
@@ -52,9 +61,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it 'should save the question to database' do
-        expect {
-          post :create, question: attributes_for(:question)
-        }.to change(Question, :count).by(1)
+        expect{post :create, question: attributes_for(:question)}.to change(Question, :count).by(1)
       end
 
       it 'should redirect to page with question' do
@@ -65,9 +72,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       it 'should does not save the invalid question' do
-        expect {
-          post :create, question: attributes_invalid_question
-        }.to_not change(Question, :count)
+        expect{post :create, question: attributes_invalid_question}.to_not change(Question, :count)
       end
 
       it 'should render new template if does not create the question' do

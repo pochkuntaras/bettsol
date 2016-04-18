@@ -3,8 +3,16 @@ Rails.application.routes.draw do
 
   root 'questions#index'
 
-  resources :questions, except: :index do
-    resources :answers, only: [:create, :update, :destroy], shallow: true do
+  concern :votable do
+    member do
+      patch :like
+      patch :dislike
+      delete :indifferent
+    end
+  end
+
+  resources :questions, except: :index, concerns: :votable do
+    resources :answers, only: [:create, :update, :destroy], concerns: :votable, shallow: true do
       patch :best, on: :member
     end
   end

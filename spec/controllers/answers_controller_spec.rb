@@ -17,6 +17,10 @@ RSpec.describe AnswersController, type: :controller do
   log_in_user
 
   let(:question) { create :question }
+  let(:votable) { create :answer }
+  let(:user_votable) { create :answer, user: @user }
+
+  it_behaves_like 'voted'
 
   describe 'POST #create' do
     it 'should save the answer with current user as author' do
@@ -31,15 +35,13 @@ RSpec.describe AnswersController, type: :controller do
         }.to change(question.answers, :count).by(1)
       end
 
-      it 'should redirect to show question after created the answer' do
+      it 'should render template create after created the answer' do
         post :create, question_id: question, answer: attributes_for(:answer), format: :js
         expect(response).to render_template :create
       end
     end
 
     describe 'PATCH #update' do
-      log_in_user
-
       let!(:answer) { create :answer }
       let!(:user_answer) { create :answer, user: @user }
       let(:attributes_updated_answer) { attributes_for :updated_answer }
@@ -95,8 +97,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #best' do
-    log_in_user
-
     context 'current user as author the question' do
       let!(:user_question) { create :question_with_answers, user: @user }
       let(:answer) { user_question.answers.first }
