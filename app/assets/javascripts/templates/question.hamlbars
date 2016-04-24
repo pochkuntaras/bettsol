@@ -1,0 +1,9 @@
+.question
+  %h2
+    {{question.title}}
+    .actions
+      = hb 'if author' do
+        %a.button.button_red{ href: '{{question.path}}', data: { method: 'delete' } }
+          Delete
+      %a.button.button_blue{ href: '{{question.path}}' }
+        More

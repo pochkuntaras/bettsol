@@ -21,6 +21,8 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    gon.question_id = @question.id
+
     @answer = @question.answers.build
     @answer.attachments.build
   end
@@ -34,6 +36,7 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.build(question_params)
 
     if @question.save
+      PrivatePub.publish_to '/questions', JSON.parse_nil(render_to_string 'show.json')
       redirect_to @question, notice: 'Your question was successfully created.'
     else
       flash.now[:error] = 'Your question was not created!'

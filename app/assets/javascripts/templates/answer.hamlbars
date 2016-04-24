@@ -1,0 +1,52 @@
+.answer{ id: 'answer_{{answer.id}}' }
+  = hb 'if canVote' do
+    %a.voice.voice_like{ href: '{{answer.likePath}}', data: { remote: 'true', method: 'patch' } }
+      Like
+    %a.voice.voice_like{ href: '{{answer.dislikePath}}', data: { remote: 'true', method: 'patch' } }
+      Dislike
+    %a.voice.voice_indifferent{ href: '{{answer.indifferentPath}}', style: 'display: none;', data: { remote: 'true', method: 'delete' } }
+      Indifferent
+  Rating:&nbsp;
+  %span.rating
+    {{answer.rating}}
+  %p
+    {{answer.content}}
+  = hb 'each answer.attachments' do
+    %a{ href: '{{this.path}}' }
+      {{this.identifier}}
+  .comments
+  = hb 'if currentUser' do
+    %form.form.form_new-comment{ action: '{{answer.commentsPath}}', data: { remote: 'true' }, method: 'post' }
+      .form__field
+      %label{ for: 'comment_content' }
+        Content
+      %textarea.form__input{ name: 'comment[content]' }
+      .actions
+        %input.button.button_green{ name: 'commit', value: 'Add comment', type: 'submit' }
+  = hb 'if author' do
+    %form.form{ id: 'edit_answer_{{answer.id}}', style: 'display: none;', action: '{{answer.path}}', data: { remote: 'true' }, method: 'post' }
+      %input{ name: '_method', value: 'patch', type: 'hidden' }
+      .form__field
+        %label{ for: 'answer_content' }
+          Content
+        %textarea.form__input{ name: 'answer[content]' }
+          {{answer.content}}
+      = hb 'each answer.attachments' do
+        .nested-fields
+          {{this.identifier}}
+          %input(name="answer[attachments_attributes][{{@index}}][_destroy]" value="0" type="hidden")
+          %input(id="delete_attachment_{{this.id}}" value="1" name="answer[attachments_attributes][{{@index}}][_destroy]" type="checkbox")
+          %label{ for: 'answer_attachments_attributes_{{@index}}__destroy' }
+            delete
+        %input(id="answer_attachments_attributes_{{@index}}_id" value="{{this.id}}" name="answer[attachments_attributes][{{@index}}][id]" type="hidden")
+      .actions
+        %input.button.button_green{ name: 'commit', value: 'Update', type: 'submit' }
+  .actions
+    = hb 'if author' do
+      %button.button.button_orange.button_answer-edit{ name: 'button', type: 'submit' }
+        Edit
+      %a.button.button_red.button_answer-delete{ href: '{{answer.path}}', data: { remote: 'true', method: 'delete' }, rel: 'nofollow' }
+        Delete
+    = hb 'if authorQuestion' do
+      %a.button.button_green{ href: '{{answer.bestPath}}', data: { remote: 'true', method: 'patch' } }
+        Best answer

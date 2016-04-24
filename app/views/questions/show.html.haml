@@ -2,7 +2,7 @@
 .answers
   = render @question.answers
 - if user_signed_in?
-  = form_for [@question, @answer], remote: true, html: { class: 'form' } do |f|
+  = form_for [@question, @answer], remote: true, data: { type: :json } , html: { class: 'form' } do |f|
     .form__field
       = f.label :content
       = f.text_area :content, class: 'form__input'
@@ -12,3 +12,5 @@
 - else
   .actions
     = link_to 'Sign in to answer', new_user_session_path, rel: 'nofollow', class: 'button button_green'
+= subscribe_to "/questions/#{@question.id}/answers"
+= subscribe_to '/comments'

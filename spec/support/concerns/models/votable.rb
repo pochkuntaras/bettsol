@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 shared_examples 'votable' do
-  let (:model) { create described_class.to_s.underscore.to_sym }
-  let (:user) { create :user }
+  let(:model) { create described_class.to_s.underscore.to_sym }
+  let(:user) { create :user }
 
   it { should have_many(:voices).dependent(:destroy) }
 
