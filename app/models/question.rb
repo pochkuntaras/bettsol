@@ -11,7 +11,7 @@
 #
 
 class Question < ActiveRecord::Base
-  include Attachable, Votable
+  include Attachable, Votable, Commentable
 
   belongs_to :user
 

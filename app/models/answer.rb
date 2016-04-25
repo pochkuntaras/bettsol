@@ -12,7 +12,7 @@
 #
 
 class Answer < ActiveRecord::Base
-  include Attachable, Votable
+  include Attachable, Votable, Commentable
 
   default_scope { order best: :desc }
 

@@ -1,0 +1,7 @@
+- if current_user
+  = form_for [commentable, Comment.new], remote: true, html: { id: nil, class: 'form form_new-comment' } do |f|
+    .form__field
+      = f.label :content
+      = f.text_area :content, id: nil, class: 'form__input'
+    .actions
+      = f.submit 'Add comment', class: 'button button_green'

@@ -1,10 +1,15 @@
 = content_tag_for :div, question do
   = vote_for question
-  %h1= question.title
-  %p= question.content
+  %h1
+    = question.title
+  %p
+    = question.content
   = render question.attachments
-  = render 'questions/edit_form'
+  .comments
+    = render question.comments
+  = render partial: 'comments/form', locals: { commentable: question }
   - if current_user && current_user.is_author?(question)
+    = render 'questions/edit_form'
     .actions
-      = button_tag 'Edit', class: 'button button_orange button_question-edit'
+      = button_tag 'Edit', class: 'button button_orange button_question-edit', type: 'button'
       = link_to 'Delete', question, method: :delete, class: 'button button_red'

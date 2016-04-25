@@ -20,7 +20,13 @@ class AnswersController < ApplicationController
   def create
     @question = Question.find(params[:question_id])
     @answer = current_user.answers.build(answer_params.merge(question: @question))
-    @answer.save
+
+    if @answer.save
+      PrivatePub.publish_to "/questions/#{@question.id}/answers", JSON.parse_nil(render_to_string 'show.json')
+      render json: { notice: 'Your answer was successfully created.' }
+    else
+      render json: { errors: @answer.errors }, status: :unprocessable_entity
+    end
   end
 
   def update
