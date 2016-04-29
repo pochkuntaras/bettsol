@@ -29,12 +29,17 @@ RSpec.describe AnswersController, type: :controller do
       }.to change(question.answers, :count).by(1)
     end
 
+    it 'should does not save the invalid answer to the question' do
+      expect {
+        post :create, question_id: question, answer: attributes_for(:invalid_answer), format: :json
+      }.to_not change(Answer, :count)
+    end
+
     context 'with valid attributes' do
       before { post :create, question_id: question, answer: attributes_for(:answer), format: :json }
 
-      it { expect(response).to have_http_status(:ok) }
+      it { expect(response).to have_http_status(:created) }
       it { expect(assigns(:answer).user).to eq @user }
-      it { expect(response_json['notice']).to be_present }
     end
 
     context 'with invalid attributes' do
@@ -51,7 +56,7 @@ RSpec.describe AnswersController, type: :controller do
     let(:attributes_updated_answer) { attributes_for :updated_answer }
 
     it 'should does not update the question if current user is not author' do
-      patch :update, question_id: answer.question, id: answer, answer: attributes_updated_answer, format: :js
+      patch :update, id: answer, answer: attributes_updated_answer, format: :js
 
       answer.reload
 
@@ -59,7 +64,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     it 'should update the question if current user as author' do
-      patch :update, question_id: user_answer.question, id: user_answer, answer: attributes_updated_answer, format: :js
+      patch :update, id: user_answer, answer: attributes_updated_answer, format: :js
 
       user_answer.reload
 
@@ -67,34 +72,17 @@ RSpec.describe AnswersController, type: :controller do
       expect(assigns(:question)).to eq user_answer.question
       expect(user_answer.content).to eq attributes_updated_answer[:content]
     end
-
-    context 'with invalid attributes' do
-      it 'should does not save the invalid answer to the question' do
-        expect {
-          post :create, question_id: question, answer: attributes_for(:invalid_answer), format: :js
-        }.to_not change(Answer, :count)
-      end
-    end
   end
 
   describe 'DELETE #destroy' do
     let!(:answer) { create :answer }
     let!(:user_answer) { create :answer, user: @user }
 
-    it 'should delete the answer if user is author of the answer' do
-      expect{
-        delete :destroy, question_id: user_answer.question, id: user_answer, format: :js
-      }.to change(Answer, :count).by(-1)
-    end
-
-    it 'should does not delete the answer if user is not author of the answer' do
-      expect{
-        delete :destroy, question_id: answer.question, id: answer, format: :js
-      }.to_not change(Answer, :count)
-    end
+    it { expect{delete :destroy, id: user_answer, format: :json }.to change(Answer, :count).by(-1) }
+    it { expect{delete :destroy, id: answer, format: :json}.to_not change(Answer, :count) }
 
     it 'should render nothing' do
-      delete :destroy, question_id: user_answer.question, id: user_answer, format: :js
+      delete :destroy, id: user_answer, format: :json
       expect(response).to render_template nil
     end
   end

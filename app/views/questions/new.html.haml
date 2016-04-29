@@ -6,7 +6,7 @@
   .form__field
     = f.label :content
     = f.text_area :content, class: 'form__input'
-  = f.fields_for :attachments do |attachment|
+  = f.fields_for :attachments, @question.attachments.build do |attachment|
     = render 'layouts/attachment_fields', f: attachment
   .actions
     = link_to_add_association 'Add attachment', f, :attachments, partial: 'layouts/attachment_fields', class: 'button button_blue'

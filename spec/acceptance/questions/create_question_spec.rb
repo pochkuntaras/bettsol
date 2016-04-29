@@ -11,7 +11,7 @@ feature 'Create question' do
     scenario 'User created question' do
       create_question attributes_question
 
-      expect(page).to have_content 'Your question was successfully created.'
+      expect(page).to have_content 'Question was successfully created.'
       expect(page).to have_content attributes_question[:title]
       expect(page).to have_content attributes_question[:content]
     end
@@ -19,7 +19,7 @@ feature 'Create question' do
     scenario 'User trying create invalid question' do
       create_question attributes_invalid_question
 
-      expect(page).to have_content 'Your question was not created!'
+      expect(page).to have_content 'Question could not be created.'
       expect(page).to have_field 'Title', with: attributes_invalid_question[:title]
       expect(page).to have_field 'Content', with: attributes_invalid_question[:content]
     end

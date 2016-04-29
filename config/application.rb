@@ -8,6 +8,7 @@ module Bettsol
     config.i18n.default_locale = :en
     config.sass.preferred_syntax = :sass
     config.active_record.raise_in_transactional_callbacks = true
+    config.app_generators.scaffold_controller :responders_controller
 
     config.generators do |g|
       g.test_framework :rspec, fixtures: true, view_specs: false,

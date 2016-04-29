@@ -43,6 +43,6 @@ feature 'Edit question' do
     end
 
     expect(page).to have_current_path question_path(question)
-    expect(page).to have_content 'Your question was successfully updated.'
+    expect(page).to have_content 'Question was successfully updated.'
   end
 end

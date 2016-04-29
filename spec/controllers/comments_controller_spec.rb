@@ -36,7 +36,7 @@ RSpec.describe CommentsController, type: :controller do
     context 'with valid attributes' do
       before { post :create, question_id: question, comment: attributes_comment, format: :json }
 
-      it { expect(response).to have_http_status(:ok) }
+      it { expect(response).to have_http_status(:created) }
       it { expect(assigns(:comment).user).to eq @user }
       it { expect(response_json['notice']).to be_present }
     end
