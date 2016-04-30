@@ -14,12 +14,13 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!, :set_commentable
 
+  after_action :publish_comment, only: :create
+
   def create
     @comment = current_user.comments.build(comment_params.merge(commentable: @commentable))
 
     if @comment.save
-      PrivatePub.publish_to '/comments', JSON.parse_nil(render_to_string 'show.json')
-      render json: { notice: 'Your answer was comment created.' }
+      render json: { notice: 'Comment was created.' }, status: :created
     else
       render json: { errors: @comment.errors }, status: :unprocessable_entity
     end
@@ -30,6 +31,10 @@ class CommentsController < ApplicationController
   def set_commentable
     commentable_id = params.keys.detect { |k| k =~ /(question|answer)_id/ }
     @commentable = $1.classify.constantize.find(params[commentable_id])
+  end
+
+  def publish_comment
+    PrivatePub.publish_to '/comments', JSON.parse_nil(render_to_string 'show.json') if @comment.valid?
   end
 
   def comment_params

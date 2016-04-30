@@ -13,58 +13,52 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, except: [:index, :new, :create]
+  before_action :authorize_question, only: [:update, :destroy]
+
+  after_action :publish_question, only: :create
+
+  respond_to :js, only: :update
 
   include Voted
 
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
     gon.question_id = @question.id
-
-    @answer = @question.answers.build
-    @answer.attachments.build
+    respond_with @question
   end
 
   def new
-    @question = Question.new
-    @question.attachments.build
+    respond_with(@question = Question.new)
   end
 
   def create
-    @question = current_user.questions.build(question_params)
-
-    if @question.save
-      PrivatePub.publish_to '/questions', JSON.parse_nil(render_to_string 'show.json')
-      redirect_to @question, notice: 'Your question was successfully created.'
-    else
-      flash.now[:error] = 'Your question was not created!'
-      render :new
-    end
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def update
-    if current_user.is_author?(@question) && @question.update(question_params)
-      flash.now[:notice] = 'Your question was successfully updated.'
-    else
-      flash.now[:error] = 'Your question was not updated!'
-    end
+    @question.update(question_params)
+    respond_with @question
   end
 
   def destroy
-    if current_user.is_author?(@question)
-      @question.destroy
-      flash[:notice] = 'Your question was successfully deleted.'
-    end
-
-    redirect_to root_url
+    respond_with(@question.destroy, location: root_url)
   end
 
   private
 
   def set_question
     @question = Question.find(params[:id])
+  end
+
+  def authorize_question
+    head :forbidden unless current_user.is_author?(@question)
+  end
+
+  def publish_question
+    PrivatePub.publish_to '/questions', JSON.parse_nil(render_to_string 'show.json') if @question.valid?
   end
 
   def question_params

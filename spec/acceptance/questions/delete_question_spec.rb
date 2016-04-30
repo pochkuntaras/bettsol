@@ -23,7 +23,7 @@ feature 'Delete question' do
     click_link 'Delete', href: question_path(question)
 
     expect(page).to have_current_path root_path
-    expect(page).to have_content 'Your question was successfully deleted.'
+    expect(page).to have_content 'Question was successfully destroyed.'
 
     expect(page).not_to have_content question.title
     expect(page).not_to have_link 'More', href: question_path(question)

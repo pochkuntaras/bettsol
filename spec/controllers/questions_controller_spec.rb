@@ -37,8 +37,6 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :show, id: question }
 
     it { expect(assigns(:question)).to eq question }
-    it { expect(assigns(:answer)).to be_a_new(Answer) }
-    it { expect(assigns(:answer).attachments.first).to be_a_new(Attachment) }
     it { expect(response).to render_template :show }
   end
 
@@ -48,7 +46,6 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :new }
 
     it { expect(assigns(:question)).to be_a_new(Question) }
-    it { expect(assigns(:question).attachments.first).to be_a_new(Attachment) }
     it { expect(response).to render_template :new }
   end
 
@@ -112,17 +109,20 @@ RSpec.describe QuestionsController, type: :controller do
 
     let!(:user_question) { create :question, user: @user }
 
-    it 'should delete the question if user is author of the question' do
-      expect{delete :destroy, id: user_question}.to change(Question, :count).by(-1)
+    it { expect{delete :destroy, id: user_question}.to change(Question, :count).by(-1) }
+    it { expect{delete :destroy, id: question}.to_not change(Question, :count) }
+
+    context 'user is author of the question' do
+      before { delete :destroy, id: user_question }
+
+      it { expect(response).to redirect_to root_url }
     end
 
-    it 'should does not delete the question if user is not author of the question' do
-      expect{delete :destroy, id: question}.to_not change(Question, :count)
-    end
+    context 'user is not author of the question' do
+      before { delete :destroy, id: question }
 
-    it 'should redirect to page with listing questions' do
-      delete :destroy, id: question
-      expect(response).to redirect_to root_url
+      it { expect(response.body).to be_blank }
+      it { expect(response).to have_http_status(:forbidden) }
     end
   end
 end
