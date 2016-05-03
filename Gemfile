@@ -22,6 +22,10 @@ gem 'cocoon'
 gem 'private_pub'
 gem 'thin'
 gem 'responders', '~> 2.0'
+gem 'figaro'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
@@ -39,6 +43,7 @@ end
 group :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'capybara'
+  gem 'capybara-email'
   gem 'poltergeist'
   gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'fuubar'

@@ -31,4 +31,59 @@ RSpec.describe User, type: :model do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:voices).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:authorizations).dependent(:destroy) }
+
+  describe '.find_for_oauth' do
+    let!(:user) { create :user }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '534038') }
+
+    context 'user already has authorization' do
+      it 'returns the user' do
+        user.authorizations.create(provider: 'facebook', uid: '534038')
+        expect(User.find_for_oauth(auth)).to eq user
+      end
+    end
+
+    context 'provider has not provided email address' do
+      it { expect(User.find_for_oauth(auth)).to be_nil }
+    end
+
+    context 'user has not authorization' do
+      let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '534038', info: { email: user.email }) }
+
+      context 'user already exists' do
+        it { expect{User.find_for_oauth(auth)}.to_not change(User, :count) }
+        it { expect{User.find_for_oauth(auth)}.to change(user.authorizations, :count).by(1) }
+        it { expect(User.find_for_oauth(auth)).to eq user }
+
+        it 'should create authorization with provider and uid' do
+          authorization = User.find_for_oauth(auth).authorizations.first
+
+          expect(authorization.provider).to eq auth.provider
+          expect(authorization.uid).to eq auth.uid
+        end
+      end
+
+      context 'user does not exists' do
+        let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '534038', info: { email: 'user@example.com' }) }
+
+        it { expect{User.find_for_oauth(auth)}.to change(User, :count).by(1) }
+
+        context 'created authorization' do
+          let(:user) { User.find_for_oauth(auth) }
+
+          it { expect(user).to be_a(User) }
+          it { expect(user.email).to eq auth.info.email }
+          it { expect(user.authorizations).to_not be_empty }
+
+          it 'should create authorization with provider and uid' do
+            authorization = user.authorizations.first
+
+            expect(authorization.provider).to eq auth.provider
+            expect(authorization.uid).to eq auth.uid
+          end
+        end
+      end
+    end
+  end
 end

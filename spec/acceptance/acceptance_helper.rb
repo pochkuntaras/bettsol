@@ -1,7 +1,11 @@
 require 'rails_helper'
+require 'capybara/email/rspec'
+
+OmniAuth.config.test_mode = true
 
 RSpec.configure do |config|
   config.include AcceptanceMacros, type: :feature
+  config.include OmniAuthMacros, type: :feature
   config.use_transactional_fixtures = false
 
   config.before(:suite) do

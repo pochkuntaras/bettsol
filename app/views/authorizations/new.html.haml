@@ -1,0 +1,7 @@
+%h1 Please enter your email!
+= form_tag authorizations_path, html: { class: 'form' } do
+  .form__field
+    = label_tag :email
+    = text_field_tag :email, nil, placeholder: 'Your email address', class: 'form__input'
+  .actions
+    = submit_tag 'Continue', class: 'button button_green'

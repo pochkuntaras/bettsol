@@ -29,9 +29,10 @@ class User < ActiveRecord::Base
   has_many :answers, dependent: :destroy
   has_many :voices, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :authorizations, dependent: :destroy
 
-  devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :confirmable,
+         :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
 
   def is_author?(object)
     object.user_id == self.id
@@ -39,5 +40,25 @@ class User < ActiveRecord::Base
 
   def voted_for?(object)
     voices.where(votable: object).exists?
+  end
+
+  def self.find_for_oauth(auth, email = nil)
+    authorization = Authorization.find_by_provider_and_uid(auth.provider, auth.uid)
+
+    return authorization.user if authorization
+
+    auth_email = auth.info && auth.info.email
+    email = email || auth_email
+
+    if email
+      user = User.find_by_email(email)
+
+      transaction do
+        user = User.create!(email: email, password: Devise.friendly_token, confirmed_at: Time.now) unless user
+        user.authorizations.create!(provider: auth.provider, uid: auth.uid, confirmed_at: auth_email ? Time.now : nil)
+      end
+    end
+
+    user
   end
 end
