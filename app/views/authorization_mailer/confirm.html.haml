@@ -1,0 +1,4 @@
+%p Hello #{@authorization.user.email}!
+%p Someone has requested a link to authorization to your account.
+= link_to 'Confirm authorization', confirm_authorization_url(@authorization, token: @authorization.confirmation_token)
+%p If you didn't request this, please ignore this email.

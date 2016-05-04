@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 
   root 'questions#index'
 
@@ -19,5 +19,9 @@ Rails.application.routes.draw do
     resources :answers, only: [:create, :update, :destroy], concerns: [:votable, :commentable] do
       patch :best, on: :member
     end
+  end
+
+  resources :authorizations, only: [:new, :create] do
+    get 'confirm/:token', action: :confirm, on: :member, as: :confirm
   end
 end
