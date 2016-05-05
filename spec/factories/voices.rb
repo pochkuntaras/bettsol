@@ -12,12 +12,12 @@
 #
 
 FactoryGirl.define do
-  factory :voice do
+  factory :like, class: Voice do
     user
     solution 1
   end
 
-  factory :negative_voice, class: Voice do
+  factory :dislike, class: Voice do
     user
     solution -1
   end

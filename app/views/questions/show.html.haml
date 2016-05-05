@@ -1,7 +1,7 @@
 = render @question
 .answers
   = render @question.answers
-- if user_signed_in?
+- if can? :create, Answer
   = form_for [@question, @question.answers.build], remote: true, data: { type: :json } , html: { class: 'form' } do |f|
     .form__field
       = f.label :content

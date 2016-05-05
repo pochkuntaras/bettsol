@@ -1,7 +1,7 @@
-- if current_user && ! current_user.is_author?(votable)
-  = link_to 'Like', [:like, votable], remote: true, method: :patch, class: 'voice voice_like', style: "#{'display: none;' if current_user.voted_for?(votable)}"
-  = link_to 'Dislike', [:dislike, votable], remote: true, method: :patch, class: 'voice voice_dislike', style: "#{'display: none;' if current_user.voted_for?(votable)}"
-  = link_to 'Indifferent', [:indifferent, votable], remote: true, method: :delete, class: 'voice voice_indifferent', style: "#{'display: none;' unless current_user.voted_for?(votable)}"
+- if can? :vote, votable
+  = link_to 'Like', [:like, votable], remote: true, method: :patch, class: 'voice voice_like', style: "#{'display: none;' if cannot? :like, votable}"
+  = link_to 'Dislike', [:dislike, votable], remote: true, method: :patch, class: 'voice voice_dislike', style: "#{'display: none;' if cannot? :dislike, votable}"
+  = link_to 'Indifferent', [:indifferent, votable], remote: true, method: :delete, class: 'voice voice_indifferent', style: "#{'display: none;' if cannot? :indifferent, votable}"
 Rating:&nbsp;
 %span.rating
   = votable.rating

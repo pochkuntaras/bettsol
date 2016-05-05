@@ -13,20 +13,19 @@
 
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_answer, except: :create
-  before_action :get_question_from_answer, only: [:update, :best]
-  before_action :authorize_answer, only: [:update, :destroy]
+  before_action :build_answer, only: :create
 
   after_action :publish_answer, only: :create
+
+  include Voted
+
+  load_and_authorize_resource
 
   respond_to :json, only: [:create, :destroy]
   respond_to :js, only: :update
 
-  include Voted
-
   def create
-    @question = Question.find(params[:question_id])
-    respond_with(@answer = current_user.answers.create(answer_params.merge(question: @question)))
+    respond_with @answer
   end
 
   def update
@@ -39,21 +38,14 @@ class AnswersController < ApplicationController
   end
 
   def best
-    @answer.choose_as_best if current_user.is_author?(@question)
+    @answer.choose_as_best
   end
 
   private
 
-  def set_answer
-    @answer = Answer.find(params[:id])
-  end
-
-  def authorize_answer
-    head :forbidden unless current_user.is_author?(@answer)
-  end
-
-  def get_question_from_answer
-    @question = @answer.question
+  def build_answer
+    @question = Question.find(params[:question_id])
+    @answer = current_user.answers.create(answer_params.merge(question: @question))
   end
 
   def publish_answer

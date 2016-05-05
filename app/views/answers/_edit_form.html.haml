@@ -1,4 +1,4 @@
-- if current_user && current_user.is_author?(answer)
+- if can? :update, answer
   = form_for answer, remote: true, html: { class: 'form', style: 'display: none;' } do |f|
     .form__field
       = f.label :content

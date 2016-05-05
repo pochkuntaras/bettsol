@@ -16,6 +16,7 @@ gem 'autoprefixer-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
+gem 'cancancan', '~> 1.10'
 gem 'carrierwave'
 gem 'remotipart', '~> 1.2'
 gem 'cocoon'

@@ -4,7 +4,7 @@
     %h2
       = question.title
     .actions
-      - if current_user && current_user.is_author?(question)
+      - if can? :destroy, question
         = link_to 'Delete', question, method: :delete, class: 'button button_red'
       = link_to 'More', question, class: 'button button_blue'
 = subscribe_to '/questions'

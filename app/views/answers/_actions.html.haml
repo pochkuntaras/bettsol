@@ -1,7 +1,7 @@
-- if current_user
-  .actions
-    - if current_user.is_author?(answer)
-      = button_tag 'Edit', class: 'button button_orange button_answer-edit', type: 'button'
-      = link_to 'Delete', answer_path(answer), method: :delete, remote: true, data: { type: :json }, class: 'button button_red button_answer-delete'
-    - if current_user.is_author?(@question) && ! answer.best?
-      = link_to 'Best answer', best_answer_path(answer), method: :patch, remote: true, class: 'button button_green'
+.actions
+  - if can? :update, answer
+    = button_tag 'Edit', class: 'button button_orange button_answer-edit', type: 'button'
+  - if can? :destroy, answer
+    = link_to 'Delete', answer_path(answer), method: :delete, remote: true, data: { type: :json }, class: 'button button_red button_answer-delete'
+  - if can? :best, answer
+    = link_to 'Best answer', best_answer_path(answer), method: :patch, remote: true, class: 'button button_green'
