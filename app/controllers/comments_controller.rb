@@ -16,6 +16,8 @@ class CommentsController < ApplicationController
 
   after_action :publish_comment, only: :create
 
+  authorize_resource
+
   def create
     @comment = current_user.comments.build(comment_params.merge(commentable: @commentable))
 

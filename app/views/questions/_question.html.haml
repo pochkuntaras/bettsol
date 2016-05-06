@@ -8,7 +8,7 @@
   .comments
     = render question.comments
   = render partial: 'comments/form', locals: { commentable: question }
-  - if current_user && current_user.is_author?(question)
+  - if can? :update, question
     = render 'questions/edit_form'
     .actions
       = button_tag 'Edit', class: 'button button_orange button_question-edit', type: 'button'

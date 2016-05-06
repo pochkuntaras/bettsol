@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_user_id_in_gon
 
+  rescue_from CanCan::AccessDenied do
+    head :forbidden
+  end
+
   private
 
   def set_current_user_id_in_gon

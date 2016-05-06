@@ -69,7 +69,6 @@ RSpec.describe AnswersController, type: :controller do
       user_answer.reload
 
       expect(assigns(:answer)).to eq user_answer
-      expect(assigns(:question)).to eq user_answer.question
       expect(user_answer.content).to eq attributes_updated_answer[:content]
     end
   end
@@ -95,7 +94,6 @@ RSpec.describe AnswersController, type: :controller do
       before { patch :best, question_id: user_question, id: answer, format: :js }
 
       it { expect(assigns(:answer)).to eq answer }
-      it { expect(assigns(:question)).to eq user_question }
       it { expect(response).to render_template :best }
 
       it 'should choose the answer as the best' do

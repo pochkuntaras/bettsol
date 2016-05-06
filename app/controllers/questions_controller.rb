@@ -12,17 +12,18 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_question, except: [:index, :new, :create]
-  before_action :authorize_question, only: [:update, :destroy]
+  before_action :build_question, only: :create
 
   after_action :publish_question, only: :create
 
-  respond_to :js, only: :update
-
   include Voted
 
+  load_and_authorize_resource
+
+  respond_to :js, only: :update
+
   def index
-    respond_with(@questions = Question.all)
+    respond_with @questions
   end
 
   def show
@@ -31,11 +32,12 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    respond_with(@question = Question.new)
+    respond_with @question
   end
 
   def create
-    respond_with(@question = current_user.questions.create(question_params))
+    @question.save
+    respond_with @question
   end
 
   def update
@@ -49,12 +51,8 @@ class QuestionsController < ApplicationController
 
   private
 
-  def set_question
-    @question = Question.find(params[:id])
-  end
-
-  def authorize_question
-    head :forbidden unless current_user.is_author?(@question)
+  def build_question
+    @question = current_user.questions.build(question_params)
   end
 
   def publish_question
