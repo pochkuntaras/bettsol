@@ -2,6 +2,8 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
+    skip_load_and_authorize_resource only: [:like, :dislike, :indifferent]
+
     before_action :load_and_authorize_votable, only: [:like, :dislike, :indifferent]
     before_action :check_voice, only: [:like, :dislike]
   end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  use_doorkeeper
+
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 
   root 'questions#index'
@@ -23,5 +25,13 @@ Rails.application.routes.draw do
 
   resources :authorizations, only: [:new, :create] do
     get 'confirm/:token', action: :confirm, on: :member, as: :confirm
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: :index do
+        get :me, on: :collection
+      end
+    end
   end
 end
