@@ -27,6 +27,7 @@ gem 'figaro'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem 'doorkeeper'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
@@ -48,4 +49,5 @@ group :test do
   gem 'poltergeist'
   gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'fuubar'
+  gem 'json_spec'
 end
