@@ -23,27 +23,30 @@ RSpec.describe AnswersController, type: :controller do
   it_behaves_like 'voted'
 
   describe 'POST #create' do
+    let(:attributes) { attributes_for :answer }
+    let(:invalid_attributes) { attributes_for :invalid_answer }
+
     it 'should save the answer to the question' do
       expect {
-        post :create, question_id: question, answer: attributes_for(:answer), format: :json
+        post :create, question_id: question, answer: attributes, format: :json
       }.to change(question.answers, :count).by(1)
     end
 
     it 'should does not save the invalid answer to the question' do
       expect {
-        post :create, question_id: question, answer: attributes_for(:invalid_answer), format: :json
+        post :create, question_id: question, answer: invalid_attributes, format: :json
       }.to_not change(Answer, :count)
     end
 
     context 'with valid attributes' do
-      before { post :create, question_id: question, answer: attributes_for(:answer), format: :json }
+      before { post :create, question_id: question, answer: attributes, format: :json }
 
       it { expect(response).to have_http_status(:created) }
       it { expect(assigns(:answer).user).to eq @user }
     end
 
     context 'with invalid attributes' do
-      before { post :create, question_id: question, answer: attributes_for(:invalid_answer), format: :json }
+      before { post :create, question_id: question, answer: invalid_attributes, format: :json }
 
       it { expect(response).to have_http_status(:unprocessable_entity) }
       it { expect(response_json['errors']).to be_present }
@@ -53,23 +56,23 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     let!(:answer) { create :answer }
     let!(:user_answer) { create :answer, user: @user }
-    let(:attributes_updated_answer) { attributes_for :updated_answer }
+    let(:updated_attributes) { attributes_for :updated_answer }
 
     it 'should does not update the question if current user is not author' do
-      patch :update, id: answer, answer: attributes_updated_answer, format: :js
+      patch :update, id: answer, answer: updated_attributes, format: :js
 
       answer.reload
 
-      expect(answer.content).to_not eq attributes_updated_answer[:content]
+      expect(answer.content).to_not eq updated_attributes[:content]
     end
 
     it 'should update the question if current user as author' do
-      patch :update, id: user_answer, answer: attributes_updated_answer, format: :js
+      patch :update, id: user_answer, answer: updated_attributes, format: :js
 
       user_answer.reload
 
       expect(assigns(:answer)).to eq user_answer
-      expect(user_answer.content).to eq attributes_updated_answer[:content]
+      expect(user_answer.content).to eq updated_attributes[:content]
     end
   end
 

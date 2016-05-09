@@ -23,6 +23,8 @@ class Ability
       can :best, Answer do |object|
         object.question.user_id == user.id && ! object.best?
       end
+
+      can [:index, :me], :profile
     end
 
     can :read, :all

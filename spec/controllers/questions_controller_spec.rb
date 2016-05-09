@@ -13,7 +13,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:attributes_invalid_question) { attributes_for(:invalid_question) }
+  let(:invalid_attributes) { attributes_for :invalid_question }
   let(:questions) { create_list :question, 2 }
   let!(:question) { questions.first }
 
@@ -53,12 +53,15 @@ RSpec.describe QuestionsController, type: :controller do
     log_in_user
 
     it 'should save the question with current user as author' do
-      expect{delete :destroy, id: question}.to_not change(Question, :count)
+      post :create, question: attributes_for(:question)
+      expect(assigns(:question).user).to eq @user
     end
 
     context 'with valid attributes' do
       it 'should save the question to database' do
-        expect{post :create, question: attributes_for(:question)}.to change(Question, :count).by(1)
+        expect {
+          post :create, question: attributes_for(:question)
+        }.to change(Question, :count).by(1)
       end
 
       it 'should redirect to page with question' do
@@ -69,11 +72,13 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       it 'should does not save the invalid question' do
-        expect{post :create, question: attributes_invalid_question}.to_not change(Question, :count)
+        expect {
+          post :create, question: invalid_attributes
+        }.to_not change(Question, :count)
       end
 
       it 'should render new template if does not create the question' do
-        post :create, question: attributes_invalid_question
+        post :create, question: invalid_attributes
         expect(response).to render_template :new
       end
     end
@@ -82,25 +87,25 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'PATCH #update' do
     log_in_user
 
-    let(:attributes_updated_question) { attributes_for :updated_question }
+    let(:updated_attributes) { attributes_for :updated_question }
     let!(:user_question) { create :question, user: @user }
 
     it 'should does not update the question if current user is not author' do
-      patch :update, id: question, question: attributes_updated_question, format: :js
+      patch :update, id: question, question: updated_attributes, format: :js
 
       question.reload
 
-      expect(question.title).to_not eq attributes_updated_question[:title]
-      expect(question.content).to_not eq attributes_updated_question[:content]
+      expect(question.title).to_not eq updated_attributes[:title]
+      expect(question.content).to_not eq updated_attributes[:content]
     end
 
     it 'should update the question if current user as author' do
-      patch :update, id: user_question, question: attributes_updated_question, format: :js
+      patch :update, id: user_question, question: updated_attributes, format: :js
 
       user_question.reload
 
-      expect(user_question.title).to eq attributes_updated_question[:title]
-      expect(user_question.content).to eq attributes_updated_question[:content]
+      expect(user_question.title).to eq updated_attributes[:title]
+      expect(user_question.content).to eq updated_attributes[:content]
     end
   end
 
