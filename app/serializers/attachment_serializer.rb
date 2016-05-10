@@ -10,18 +10,6 @@
 #  updated_at      :datetime         not null
 #
 
-class Attachment < ActiveRecord::Base
-  belongs_to :attachable, polymorphic: true
-
-  mount_uploader :file, AttachmentUploader
-
-  validates :file, presence: true
-
-  def identifier
-    file.identifier
-  end
-
-  def url
-    file.url
-  end
+class AttachmentSerializer < ActiveModel::Serializer
+  attributes :id, :identifier, :url
 end
