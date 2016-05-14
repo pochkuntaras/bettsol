@@ -5,62 +5,30 @@ describe 'Profiles API' do
   let(:token) { create(:access_token, resource_owner_id: me.id).token }
 
   describe 'GET #index' do
-    context 'authorized' do
-      let!(:others) { create_list :user, 2 }
+    let(:users) { create_list :user, 2 }
+    let!(:user) { users.first }
 
-      before { get api_v1_profiles_path(access_token: token), format: :json }
+    it_behaves_like 'API Authorizable'
+    it_behaves_like 'API Attributable', 'user', %w(id email created_at updated_at), %w(password encrypted_password), 'profiles/0/'
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(response.body).to be_json_eql(others.to_json).at_path('profiles') }
-      it { expect(response.body).to_not include_json(me.to_json) }
-
-      %w(id email created_at updated_at).each do |attr|
-        it { expect(response.body).to be_json_eql(others.first.send(attr.to_sym).to_json).at_path("profiles/0/#{attr}") }
-      end
-
-      %w(password encrypted_password).each do |attr|
-        it { expect(response.body).to_not have_json_path("profiles/0/#{attr}") }
-      end
+    def do_request(params = {})
+      get api_v1_profiles_path(params), format: :json
     end
 
-    context 'unauthorized' do
-      it 'returns unauthorized status if there is no access token' do
-        get api_v1_profiles_path, format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
+    context 'response' do
+      before { do_request access_token: token }
 
-      it 'returns unauthorized status if access token is invalid' do
-        get api_v1_profiles_path(access_token: 'invalid_token'), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { expect(response.body).to be_json_eql(users.to_json).at_path('profiles') }
+      it { expect(response.body).to_not include_json(me.to_json) }
     end
   end
 
   describe 'GET #me' do
-    context 'authorized' do
-      before { get me_api_v1_profiles_path(access_token: token), format: :json }
+    it_behaves_like 'API Authorizable'
+    it_behaves_like 'API Attributable', 'me', %w(id email created_at updated_at), %w(password encrypted_password)
 
-      it { expect(response).to have_http_status(:ok) }
-
-      %w(id email created_at updated_at).each do |attr|
-        it { expect(response.body).to be_json_eql(me.send(attr.to_sym).to_json).at_path(attr) }
-      end
-
-      %w(password encrypted_password).each do |attr|
-        it { expect(response.body).to_not have_json_path(attr) }
-      end
-    end
-
-    context 'unauthorized' do
-      it 'returns unauthorized status if there is no access token' do
-        get me_api_v1_profiles_path, format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it 'returns unauthorized status if access token is invalid' do
-        get me_api_v1_profiles_path(access_token: 'invalid_token'), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
+    def do_request(params = {})
+      get me_api_v1_profiles_path(params), format: :json
     end
   end
 end

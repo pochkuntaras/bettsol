@@ -17,24 +17,34 @@ RSpec.describe CommentsController, type: :controller do
   log_in_user
 
   let(:question) { create :question }
-  let(:attributes_comment) { attributes_for :comment }
-  let(:attributes_invalid_comment) { attributes_for :invalid_comment }
+  let(:attributes) { attributes_for :comment }
+  let(:invalid_attributes) { attributes_for :invalid_comment }
 
   describe 'POST #create' do
     it 'should save the comment to the question' do
       expect {
-        post :create, question_id: question, comment: attributes_comment, format: :json
+        post :create, question_id: question, comment: attributes, format: :json
       }.to change(question.comments, :count).by(1)
     end
 
     it 'should does not save the invalid comment' do
       expect {
-        post :create, question_id: question, comment: attributes_invalid_comment, format: :json
+        post :create, question_id: question, comment: invalid_attributes, format: :json
       }.to_not change(Comment, :count)
     end
 
+    it 'publish comment' do
+      expect(PrivatePub).to receive(:publish_to).with('/comments', nil)
+      post :create, question_id: question, comment: attributes, format: :json
+    end
+
+    it 'does not publish comment' do
+      expect(PrivatePub).to_not receive(:publish_to)
+      post :create, question_id: question, comment: invalid_attributes, format: :json
+    end
+
     context 'with valid attributes' do
-      before { post :create, question_id: question, comment: attributes_comment, format: :json }
+      before { post :create, question_id: question, comment: attributes, format: :json }
 
       it { expect(response).to have_http_status(:created) }
       it { expect(assigns(:comment).user).to eq @user }
@@ -42,7 +52,7 @@ RSpec.describe CommentsController, type: :controller do
     end
 
     context 'with invalid attributes' do
-      before { post :create, question_id: question, comment: attributes_invalid_comment, format: :json }
+      before { post :create, question_id: question, comment: invalid_attributes, format: :json }
 
       it { expect(response).to have_http_status(:unprocessable_entity) }
       it { expect(response_json['errors']).to be_present }

@@ -31,13 +31,13 @@ RSpec.describe AuthorizationsController, type: :controller do
 
       before { session['devise.provider_data'] = { provider: 'provider', uid: rand(1000..5000) } }
 
-      it { expect{post :create, email: email}.to change(User, :count).by(1) }
-      it { expect{post :create, email: email}.to change{ActionMailer::Base.deliveries.count}.by(1) }
-      it { expect{post :create, email: user.email}.to change{ActionMailer::Base.deliveries.count}.by(1) }
-      it { expect{post :create, email: user.email}.not_to change(User, :count)}
-      it { expect{post :create, email: user.email}.to change(user.authorizations, :count).by(1)}
-      it { expect{post :create, email: invalid_email}.not_to change(User, :count)}
-      it { expect{post :create, email: invalid_email}.not_to change{ActionMailer::Base.deliveries.count} }
+      it { expect { post :create, email: email }.to change(User, :count).by(1) }
+      it { expect { post :create, email: email }.to change{ActionMailer::Base.deliveries.count}.by(1) }
+      it { expect { post :create, email: user.email }.to change{ActionMailer::Base.deliveries.count}.by(1) }
+      it { expect { post :create, email: user.email }.not_to change(User, :count)}
+      it { expect { post :create, email: user.email }.to change(user.authorizations, :count).by(1)}
+      it { expect { post :create, email: invalid_email }.not_to change(User, :count)}
+      it { expect { post :create, email: invalid_email }.not_to change{ActionMailer::Base.deliveries.count} }
 
       it 'should redirect to user registration page' do
         post :create, email: invalid_email
@@ -55,9 +55,9 @@ RSpec.describe AuthorizationsController, type: :controller do
     context 'with invalid provider data' do
       before { session['devise.provider_data'] = { provider: nil, uid: nil } }
 
-      it { expect{post :create, email: email}.not_to change(User, :count)}
-      it { expect{post :create, email: email}.not_to change(Authorization, :count)}
-      it { expect{post :create, email: email}.not_to change{ActionMailer::Base.deliveries.count} }
+      it { expect { post :create, email: email }.not_to change(User, :count)}
+      it { expect { post :create, email: email }.not_to change(Authorization, :count)}
+      it { expect { post :create, email: email }.not_to change{ActionMailer::Base.deliveries.count} }
 
       it 'should redirect to user registration page' do
         post :create, email: email
