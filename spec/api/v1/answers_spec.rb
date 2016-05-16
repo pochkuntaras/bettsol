@@ -1,32 +1,16 @@
 require 'rails_helper'
 
 describe 'Answers API' do
-  let(:access_token) { create :access_token }
-  let(:question) { create :question }
+  let(:token) { create(:access_token).token }
+  let!(:question) { create :question }
   let!(:answer) { create :answer, question: question }
 
   describe 'GET #index' do
-    context 'authorized' do
-      before { get api_v1_question_answers_path(question_id: question, access_token: access_token.token), format: :json }
+    it_behaves_like 'API Authorizable'
+    it_behaves_like 'API Collectible', 'answer', 1, %w(id question_id content created_at updated_at best)
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(response.body).to have_json_size(1).at_path('answers') }
-
-      %w(id question_id content created_at updated_at best).each do |a|
-        it { expect(response.body).to be_json_eql(answer.send(a.to_sym).to_json).at_path("answers/0/#{a}") }
-      end
-    end
-
-    context 'unauthorized' do
-      it 'returns unauthorized status if there is no access token' do
-        get api_v1_question_answers_path(question_id: question), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it 'returns unauthorized status if access token is invalid' do
-        get api_v1_question_answers_path(question_id: question, access_token: 'invalid_token'), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
+    def do_request(params = {})
+      get api_v1_question_answers_path({ question_id: question }.merge(params)), format: :json
     end
   end
 
@@ -35,100 +19,51 @@ describe 'Answers API' do
     let!(:comment) { comments.first }
     let!(:attachment) { create :attachment, attachable: answer }
 
-    context 'authorized' do
-      before { get api_v1_question_answer_path(question_id: question, id: answer, access_token: access_token.token), format: :json }
+    it_behaves_like 'API Authorizable'
+    it_behaves_like 'API Attributable', 'answer', %w(id question_id content created_at updated_at best), [], 'answer/'
+    it_behaves_like 'API Collectible', 'comment', 2, %w(id content created_at updated_at), 'answer/'
+    it_behaves_like 'API Collectible', 'attachment', 1, %w(id identifier url), 'answer/'
 
-      it { expect(response).to have_http_status(:ok) }
-
-      %w(id question_id content created_at updated_at best).each do |a|
-        it { expect(response.body).to be_json_eql(answer.send(a.to_sym).to_json).at_path("answer/#{a}") }
-      end
-
-      context 'comments' do
-        it { expect(response.body).to have_json_size(2).at_path('answer/comments') }
-
-        %w(id content created_at updated_at).each do |a|
-          it { expect(response.body).to be_json_eql(comment.send(a.to_sym).to_json).at_path("answer/comments/0/#{a}") }
-        end
-      end
-
-      context 'attachments' do
-        it { expect(response.body).to have_json_size(1).at_path('answer/attachments') }
-
-        %w(id identifier url).each do |a|
-          it { expect(response.body).to be_json_eql(attachment.send(a.to_sym).to_json).at_path("answer/attachments/0/#{a}") }
-        end
-      end
-    end
-
-    context 'unauthorized' do
-      it 'returns unauthorized status if there is no access token' do
-        get api_v1_question_answer_path(question_id: question, id: answer), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it 'returns unauthorized status if access token is invalid' do
-        get api_v1_question_answer_path(question_id: question, id: answer, access_token: 'invalid_token'), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
+    def do_request(params = {})
+      get api_v1_question_answer_path({ question_id: question, id: answer }.merge(params)), format: :json
     end
   end
 
   describe 'POST #create' do
-    context 'authorized' do
-      let(:user) { create :user }
-      let(:token) { create(:access_token, resource_owner_id: user.id).token }
-      let(:attributes) { attributes_for :answer }
+    let(:attributes) { attributes_for :answer }
 
-      context 'with valid attributes' do
-        it 'should save the answer with user to database' do
-          expect {
-            post api_v1_question_answers_path(question_id: question, answer: attributes, access_token: token), format: :json
-          }.to change(user.answers, :count).by(1)
-        end
+    it_behaves_like 'API Authorizable'
 
-        it 'should save the answer to question to database' do
-          expect {
-            post api_v1_question_answers_path(question_id: question, answer: attributes, access_token: token), format: :json
-          }.to change(question.answers, :count).by(1)
-        end
+    def do_request(params = {})
+      post api_v1_question_answers_path({ question_id: question, answer: attributes }.merge(params)), format: :json
+    end
 
-        context 'response' do
-          before { post api_v1_question_answers_path(question_id: question, answer: attributes, access_token: token), format: :json }
+    let(:user) { create :user }
+    let(:token) { create(:access_token, resource_owner_id: user.id).token }
 
-          it { expect(response).to have_http_status(:created) }
-          it { expect(response.body).to be_json_eql(question.id).at_path('answer/question_id') }
-          it { attributes.each { |k, v| expect(response.body).to be_json_eql(v.to_json).at_path("answer/#{k}") } }
-        end
-      end
+    context 'with valid attributes' do
+      it { expect { do_request access_token: token }.to change(user.answers, :count).by(1) }
+      it { expect{ do_request access_token: token }.to change(question.answers, :count).by(1) }
 
-      context 'with invalid attributes' do
-        let(:invalid_attributes) { attributes_for :invalid_answer }
+      context 'response' do
+        before { do_request access_token: token }
 
-        it 'should does not save the invalid answer' do
-          expect {
-            post api_v1_question_answers_path(question_id: question, answer: invalid_attributes, access_token: token), format: :json
-          }.to_not change(Answer, :count)
-        end
-
-        context 'response' do
-          before { post api_v1_question_answers_path(question_id: question, answer: invalid_attributes, access_token: token), format: :json }
-
-          it { expect(response).to have_http_status(:unprocessable_entity) }
-          it { expect(response.body).to have_json_path('errors') }
-        end
+        it { expect(response).to have_http_status(:created) }
+        it { expect(response.body).to be_json_eql(question.id).at_path('answer/question_id') }
+        it { attributes.each { |k, v| expect(response.body).to be_json_eql(v.to_json).at_path("answer/#{k}") } }
       end
     end
 
-    context 'unauthorized' do
-      it 'returns unauthorized status if there is no access token' do
-        post api_v1_question_answers_path(question_id: question), format: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
+    context 'with invalid attributes' do
+      let(:attributes) { attributes_for :invalid_answer }
 
-      it 'returns unauthorized status if access token is invalid' do
-        post api_v1_question_answers_path(question_id: question, access_token: 'invalid_token'), format: :json
-        expect(response).to have_http_status(:unauthorized)
+      it { expect{ do_request access_token: token }.to_not change(Answer, :count) }
+
+      context 'response' do
+        before { do_request access_token: token }
+
+        it { expect(response).to have_http_status(:unprocessable_entity) }
+        it { expect(response.body).to have_json_path('errors') }
       end
     end
   end

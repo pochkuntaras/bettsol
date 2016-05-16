@@ -38,6 +38,16 @@ RSpec.describe AnswersController, type: :controller do
       }.to_not change(Answer, :count)
     end
 
+    it 'publish answer' do
+      expect(PrivatePub).to receive(:publish_to).with("/questions/#{question.id}/answers", nil)
+      post :create, question_id: question, answer: attributes, format: :json
+    end
+
+    it 'does not publish answer' do
+      expect(PrivatePub).to_not receive(:publish_to)
+      post :create, question_id: question, answer: invalid_attributes, format: :json
+    end
+
     context 'with valid attributes' do
       before { post :create, question_id: question, answer: attributes, format: :json }
 

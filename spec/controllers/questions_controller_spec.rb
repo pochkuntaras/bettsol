@@ -52,34 +52,38 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'POST #create' do
     log_in_user
 
+    let(:attributes) { attributes_for :question }
+
     it 'should save the question with current user as author' do
-      post :create, question: attributes_for(:question)
+      post :create, question: attributes
       expect(assigns(:question).user).to eq @user
     end
 
     context 'with valid attributes' do
-      it 'should save the question to database' do
-        expect {
-          post :create, question: attributes_for(:question)
-        }.to change(Question, :count).by(1)
-      end
+      it { expect { post :create, question: attributes }.to change(Question, :count).by(1) }
 
       it 'should redirect to page with question' do
-        post :create, question: attributes_for(:question)
+        post :create, question: attributes
         expect(response).to redirect_to assigns(:question)
+      end
+
+      it 'publish question' do
+        expect(PrivatePub).to receive(:publish_to).with('/questions', nil)
+        post :create, question: attributes
       end
     end
 
     context 'with invalid attributes' do
-      it 'should does not save the invalid question' do
-        expect {
-          post :create, question: invalid_attributes
-        }.to_not change(Question, :count)
-      end
+      it { expect { post :create, question: invalid_attributes }.to_not change(Question, :count) }
 
       it 'should render new template if does not create the question' do
         post :create, question: invalid_attributes
         expect(response).to render_template :new
+      end
+
+      it 'does not publish question' do
+        expect(PrivatePub).to_not receive(:publish_to)
+        post :create, question: invalid_attributes
       end
     end
   end
