@@ -14,6 +14,8 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
+  subject { build :answer }
+
   it_behaves_like 'attachable'
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
@@ -49,6 +51,31 @@ RSpec.describe Answer, type: :model do
 
       expect(best_answer.best).to eq false
       expect(answer.best).to eq true
+    end
+  end
+
+  describe 'sending emails to subscribers' do
+    TestAfterCommit.with_commits(true) do
+      it 'should does not send emails if there are no subscribers' do
+        expect(SubscriptionQuestionJob).to_not receive(:perform_later)
+        subject.question.subscribers.destroy_all
+        subject.save!
+      end
+
+      context 'with subscriptions' do
+        before { create :subscription, question: subject.question }
+
+        it 'should send emails all subscribers after save' do
+          expect(SubscriptionQuestionJob).to receive(:perform_later).with(subject.question, subject)
+          subject.save!
+        end
+
+        it 'should does not send emails all subscribers after update' do
+          subject.save!
+          expect(SubscriptionQuestionJob).to_not receive(:perform_later)
+          subject.update(content: 'Updated content the answer.')
+        end
+      end
     end
   end
 end

@@ -25,6 +25,9 @@ class Ability
       end
 
       can [:index, :me], :profile
+
+      can :create, Subscription
+      can :destroy, Subscription, user_id: user.id
     end
 
     can :read, :all

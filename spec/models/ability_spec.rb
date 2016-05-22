@@ -81,5 +81,21 @@ describe Ability do
       it { should be_able_to :index, :profile, user: user }
       it { should be_able_to :me, :profile, user: user }
     end
+
+    context 'subscription' do
+      it { should be_able_to :create, Subscription }
+
+      context 'current user is subscriber' do
+        let(:subscription) { create :subscription, user: user }
+
+        it { should be_able_to :destroy, subscription, user: user }
+      end
+
+      context 'current user is not subscriber' do
+        let(:another_subscription) { create :subscription }
+
+        it { should_not be_able_to :destroy, another_subscription, user: user }
+      end
+    end
   end
 end

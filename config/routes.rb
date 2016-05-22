@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     resources :answers, only: [:create, :update, :destroy], concerns: [:votable, :commentable] do
       patch :best, on: :member
     end
+
+    resources :subscriptions, only: [:create, :destroy]
   end
 
   resources :authorizations, only: [:new, :create] do

@@ -90,8 +90,8 @@ RSpec.describe AnswersController, type: :controller do
     let!(:answer) { create :answer }
     let!(:user_answer) { create :answer, user: @user }
 
-    it { expect{delete :destroy, id: user_answer, format: :json }.to change(Answer, :count).by(-1) }
-    it { expect{delete :destroy, id: answer, format: :json}.to_not change(Answer, :count) }
+    it { expect { delete :destroy, id: user_answer, format: :json }.to change(Answer, :count).by(-1) }
+    it { expect { delete :destroy, id: answer, format: :json }.to_not change(Answer, :count) }
 
     it 'should render nothing' do
       delete :destroy, id: user_answer, format: :json

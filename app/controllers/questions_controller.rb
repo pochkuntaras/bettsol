@@ -16,9 +16,11 @@ class QuestionsController < ApplicationController
 
   after_action :publish_question, only: :create
 
+  load_and_authorize_resource
+
   include Voted
 
-  load_and_authorize_resource
+  before_action :set_subscription, only: [:show, :update]
 
   respond_to :js, only: :update
 
@@ -53,6 +55,10 @@ class QuestionsController < ApplicationController
 
   def build_question
     @question = current_user.questions.build(question_params)
+  end
+
+  def set_subscription
+    @subscription = current_user.subscriptions.find_by(question: @question) if current_user
   end
 
   def publish_question

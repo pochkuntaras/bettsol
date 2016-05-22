@@ -1,1 +1,9 @@
-= yield
+%div(style="padding: 20px; border: 1px solid #006554; background-color: #68b595;")
+  %div(style="max-width: 680px; margin: 0 auto; font-family: Arial, sans-serif; color: white;")
+    %h1(style="text-align: center;")
+      = link_to 'BettSol', root_url, style: 'text-decoration: none; color: white;'
+      %h2(style="text-align: center; text-transform: uppercase;")
+        = yield :heading
+    = yield
+    %div(style="border: 1px solid #006554; font-size: 20px; background-color: white; color: #006554; padding: 10px;")
+      = yield :message

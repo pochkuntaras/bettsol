@@ -5,8 +5,10 @@ Bundler.require(*Rails.groups)
 
 module Bettsol
   class Application < Rails::Application
+    config.time_zone = 'Kyiv'
     config.i18n.default_locale = :en
     config.sass.preferred_syntax = :sass
+    config.active_job.queue_adapter = :sidekiq
     config.active_record.raise_in_transactional_callbacks = true
     config.app_generators.scaffold_controller :responders_controller
 

@@ -1,0 +1,7 @@
+- content_for :heading do
+  New answer to
+  "#{link_to @answer.question.title, question_url(@answer.question), target: '_blank'}"
+  from #{@answer.user.email}
+- content_for :message do
+  %p
+    = @answer.content

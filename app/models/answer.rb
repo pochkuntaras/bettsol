@@ -21,10 +21,18 @@ class Answer < ActiveRecord::Base
 
   validates :user_id, :question_id, :content, presence: true
 
+  after_commit :send_subscription, on: :create, if: -> { question.subscriptions.exists? }
+
   def choose_as_best
     transaction do
       self.question.answers.update_all(best: false)
       self.update!(best: true)
     end
+  end
+
+  private
+
+  def send_subscription
+    SubscriptionQuestionJob.perform_later(question, self)
   end
 end

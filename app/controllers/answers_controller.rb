@@ -17,9 +17,9 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: :create
 
-  include Voted
-
   load_and_authorize_resource
+
+  include Voted
 
   respond_to :json, only: [:create, :destroy]
   respond_to :js, only: :update

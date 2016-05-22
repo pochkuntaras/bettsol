@@ -15,7 +15,7 @@ gem 'normalize-rails'
 gem 'autoprefixer-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'devise'
+gem 'devise', '~> 3.2'
 gem 'cancancan', '~> 1.10'
 gem 'carrierwave'
 gem 'remotipart', '~> 1.2'
@@ -31,6 +31,9 @@ gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
+gem 'sidekiq'
+gem 'redis-namespace'
+gem 'whenever', require: false
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
@@ -53,4 +56,5 @@ group :test do
   gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'fuubar'
   gem 'json_spec'
+  gem 'test_after_commit'
 end
