@@ -18,6 +18,9 @@ $(document).on 'ready', ->
         $commentable = $ '#' + data.comment.commentable
         $commentable.find('.comments').append HandlebarsTemplates['comment'](data)
 
+.on 'click', '.flash', ->
+  $(this).fadeOut('slow', -> $(this).remove())
+
 .on 'click', '.button_question-edit', ->
   $(this).closest('.question').find('form').fadeToggle()
 

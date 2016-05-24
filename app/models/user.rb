@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   has_many :voices, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :authorizations, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :confirmable,
          :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
@@ -39,7 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def voted_for?(object)
-    voices.where(votable: object).exists?
+    voices.exists?(votable: object)
   end
 
   def self.find_for_oauth(auth, email = nil)

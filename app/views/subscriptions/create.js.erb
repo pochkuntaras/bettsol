@@ -1,0 +1,8 @@
+<%= render 'layouts/notifications' %>
+
+(function() {
+    <% if @subscription.persisted? %>
+    $('.subscribe-link').replaceWith('<%= j link_to 'Unsubscribe to the question',
+     subscription_path(@subscription), method: :delete, remote: true, class: 'subscribe-link' %>');
+    <% end %>
+})();

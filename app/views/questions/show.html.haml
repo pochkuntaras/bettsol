@@ -1,4 +1,4 @@
-= render @question
+= render partial: @question, locals: { subscription: @subscription }
 .answers
   = render @question.answers
 - if can? :create, Answer

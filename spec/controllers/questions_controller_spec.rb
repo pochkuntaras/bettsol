@@ -61,6 +61,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it { expect { post :create, question: attributes }.to change(Question, :count).by(1) }
+      it { expect { post :create, question: attributes }.to change(@user.subscriptions, :count).by(1) }
 
       it 'should redirect to page with question' do
         post :create, question: attributes
@@ -75,6 +76,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       it { expect { post :create, question: invalid_attributes }.to_not change(Question, :count) }
+      it { expect { post :create, question: invalid_attributes }.to_not change(Subscription, :count) }
 
       it 'should render new template if does not create the question' do
         post :create, question: invalid_attributes
@@ -118,8 +120,8 @@ RSpec.describe QuestionsController, type: :controller do
 
     let!(:user_question) { create :question, user: @user }
 
-    it { expect{delete :destroy, id: user_question}.to change(Question, :count).by(-1) }
-    it { expect{delete :destroy, id: question}.to_not change(Question, :count) }
+    it { expect { delete :destroy, id: user_question }.to change(Question, :count).by(-1) }
+    it { expect { delete :destroy, id: question }.to_not change(Question, :count) }
 
     context 'user is author of the question' do
       before { delete :destroy, id: user_question }

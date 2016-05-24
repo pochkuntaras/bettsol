@@ -1,0 +1,21 @@
+- content_for :heading do
+  Hi! This is digest for last day #{(Time.now - 1.day).strftime('%Y-%m-%d')}.
+- content_for :message do
+  - if @digest_questions.present?
+    %table(style="width: 100%; font-size: 14px;")
+      %thead(style="font-weight: bold;")
+        %tr(style="font-weight: bold; background-color: #85caad;")
+          %td(style="padding: 10px;") Title
+          %td(style="padding: 10px;") User
+          %td(style="padding: 10px;") Created at
+      %tbody
+        - @digest_questions.each do |question|
+          %tr(style="background-color: #b0d4c5;")
+            %td(style="padding: 10px;")
+              = link_to question.title, question, title: question.title
+            %td(style="padding: 10px;")
+              = question.user.email
+            %td(style="padding: 10px;")
+              = question.created_at
+  - else
+    %p No questions.
