@@ -29,6 +29,8 @@ Rails.application.routes.draw do
     get 'confirm/:token', action: :confirm, on: :member, as: :confirm
   end
 
+  get '/search' => 'search#index', as: :search
+
   namespace :api do
     namespace :v1 do
       resources :profiles, only: :index do

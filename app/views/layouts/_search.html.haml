@@ -1,0 +1,8 @@
+.search
+  = form_tag search_path, method: :get, enforce_utf8: false, id: 'search', class: 'form' do
+    .form__field
+      = text_field_tag :query, nil, id: 'search_query', class: 'form__input', placeholder: 'Enter search...'
+    .form__field
+      = select_search_scope
+    .actions
+      = button_tag 'Search', type: 'submit', name: nil, class: 'button button_green'

@@ -30,4 +30,14 @@ module AcceptanceMacros
 
     click_on 'Log in'
   end
+
+  def search(params)
+    visit root_path
+
+    within 'form#search' do
+      fill_in :search_query, with: params[:query]
+      select params[:scope].capitalize, from: :scope
+      click_on 'Search'
+    end
+  end
 end

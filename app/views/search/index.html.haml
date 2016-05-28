@@ -1,0 +1,8 @@
+%h1 Searching results
+- if @resources.present?
+  - @resources.each do |resource|
+    %p
+      = render_search_resource resource
+  = paginate @resources
+- else
+  %p Nothing found.
