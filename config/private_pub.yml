@@ -5,6 +5,6 @@ test:
   server: "http://localhost:9292/faye"
   secret_token: "secret"
 production:
-  server: "http://example.com/faye"
-  secret_token: "18282b5caffb6aa10b2b07d8012f75d414e30d3db00de26273ab8a57563ae913"
+  server: "http://example.com/faye" #example
+  secret_token: "18282b5caffb6aa10b2b07d8012f75d414e30d3db00de26273ab8a57563ae913" #example
   signature_expiration: 3600 # one hour

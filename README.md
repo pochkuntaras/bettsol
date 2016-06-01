@@ -14,7 +14,9 @@ Install gems by running
 bundle install
 ```
 
-Copy **database.yml.example** as **database.yml** and configure your database connection.
+Copy **application.yml.example**, **database.yml.example** as **application.yml**, **database.yml** and configure them.
+
+You must visit [Facebook Developers‎](https://developers.facebook.com/) and [Twitter Apps](https://apps.twitter.com/) for register your application.
 
 Create database and run migrations:
 

@@ -39,6 +39,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    airbrussh (1.0.2)
+      sshkit (>= 1.6.1, != 1.7.0)
     annotate (2.7.0)
       activerecord (>= 3.2, < 6.0)
       rake (~> 10.4)
@@ -48,6 +50,25 @@ GEM
     bcrypt (3.1.11)
     builder (3.2.2)
     cancancan (1.13.1)
+    capistrano (3.5.0)
+      airbrussh (>= 1.0.0)
+      capistrano-harrow
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 1.9.0)
+    capistrano-bundler (1.1.4)
+      capistrano (~> 3.1)
+      sshkit (~> 1.2)
+    capistrano-harrow (0.5.1)
+    capistrano-rails (1.1.6)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
+    capistrano-rvm (0.1.2)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
+    capistrano-sidekiq (0.5.4)
+      capistrano
+      sidekiq (>= 3.4)
     capybara (2.6.2)
       addressable
       mime-types (>= 1.16)
@@ -192,6 +213,9 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     mysql2 (0.4.4)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (3.1.1)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     normalize-rails (4.0.0)
@@ -318,6 +342,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sshkit (1.10.0)
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
     test_after_commit (1.0.0)
       activerecord (>= 3.2)
     therubyracer (0.12.2)
@@ -359,6 +386,11 @@ DEPENDENCIES
   annotate
   autoprefixer-rails
   cancancan (~> 1.10)
+  capistrano (~> 3.4)
+  capistrano-bundler
+  capistrano-rails
+  capistrano-rvm
+  capistrano-sidekiq
   capybara
   capybara-email
   carrierwave

@@ -49,6 +49,11 @@ group :development do
   gem 'quiet_assets'
   gem 'letter_opener'
   gem 'spring'
+  gem 'capistrano', '~> 3.4', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-sidekiq', require: false
 end
 
 group :test do
