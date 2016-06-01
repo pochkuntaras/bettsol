@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.6'
 gem 'pg', '~> 0.15'
+gem 'mysql2'
+gem 'thinking-sphinx', '~> 3.2.0'
 gem 'therubyracer'
 gem 'uglifier', '>= 1.3.0'
 gem 'haml-rails', '~> 0.9'
@@ -34,6 +36,7 @@ gem 'oj_mimic_json'
 gem 'sidekiq'
 gem 'redis-namespace'
 gem 'whenever', require: false
+gem 'kaminari'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
