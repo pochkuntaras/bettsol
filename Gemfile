@@ -37,6 +37,7 @@ gem 'sidekiq'
 gem 'redis-namespace'
 gem 'whenever', require: false
 gem 'kaminari'
+gem 'unicorn'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
@@ -54,6 +55,7 @@ group :development do
   gem 'capistrano-rails', require: false
   gem 'capistrano-rvm', require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 group :test do
