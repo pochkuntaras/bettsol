@@ -1,11 +1,11 @@
-- if answer.persisted?
-  = content_tag_for :div, answer, class: answer.best ? 'answer_best' : nil do
-    = vote_for answer
-    %p
-      = answer.content
-    = render answer.attachments
-    .comments
-      = render answer.comments
-    = render partial: 'comments/form', locals: { commentable: answer }
-    = render partial: 'answers/edit_form', locals: { answer: answer }
-    = render partial: 'answers/actions', locals: { answer: answer }
+- cache [answer, current_user] do
+  - if answer.persisted?
+    = content_tag_for :div, answer, class: answer.best ? 'answer_best' : nil do
+      = vote_for answer
+      %p<= answer.content
+      = render answer.attachments
+      .comments
+        = render answer.comments
+      = render partial: 'comments/form', locals: { commentable: answer }
+      = render partial: 'answers/edit_form', locals: { answer: answer }
+      = render partial: 'answers/actions', locals: { answer: answer }

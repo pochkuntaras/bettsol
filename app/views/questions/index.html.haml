@@ -1,11 +1,10 @@
 = render 'layouts/search'
 %h1 Questions
-- @questions.each do |question|
-  .question
-    %h2
-      = question.title
-    .actions
-      - if can? :destroy, question
-        = link_to 'Delete', question, method: :delete, class: 'button button_red'
-      = link_to 'More', question, class: 'button button_blue'
+- cache collection_cache_key_for(:question, current_user) do
+  - @questions.each do |question|
+    .question
+      %h2<= question.title
+      .actions
+        = link_to 'Delete', question, method: :delete, class: 'button button_red' if can? :destroy, question
+        = link_to 'More', question, class: 'button button_blue'
 = subscribe_to '/questions'

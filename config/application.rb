@@ -20,5 +20,11 @@ module Bettsol
 
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
+
+    config.cache_store = :redis_store, { host: '127.0.0.1',
+                                         port: 6379,
+                                         db: 1,
+                                         namespace: 'bettsol',
+                                         expires_in: 90.minutes }
   end
 end

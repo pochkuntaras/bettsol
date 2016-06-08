@@ -34,6 +34,7 @@ gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'sidekiq'
+gem 'redis-rails'
 gem 'redis-namespace'
 gem 'whenever', require: false
 gem 'kaminari'

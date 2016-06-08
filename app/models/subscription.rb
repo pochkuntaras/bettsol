@@ -11,7 +11,7 @@
 
 class Subscription < ActiveRecord::Base
   belongs_to :user
-  belongs_to :question
+  belongs_to :question, touch: true
   belongs_to :subscriber, class_name: User, foreign_key: :user_id
 
   validates :user_id, :question_id, presence: true
