@@ -13,7 +13,7 @@
 
 class Voice < ActiveRecord::Base
   belongs_to :user
-  belongs_to :votable, polymorphic: true
+  belongs_to :votable, polymorphic: true, touch: true
 
   validates :user_id, :solution, presence: true
   validates :solution, numericality: { only_integer: true }, inclusion: { in: [-1, 1] }
